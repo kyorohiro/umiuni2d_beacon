@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-    id="info.kyorohiro.cordova.tinybeacon"
+    id="info.kyorohiro.tinybeacon"
     version="0.0.1">
     <name>TinyBeacon Plugin</name>
     <description>xxx</description>
@@ -10,14 +10,14 @@
     <repo>https://github.com/kyorohiro/cordova-plugin-hello.git</repo>
 
     <js-module src="www/tinybeacon.js" name="TinyBeacon">
-      <!--clobbers target="cordova.plugins" /-->
+      <merges target="cordova.plugins"/>
     </js-module>
 
     <!-- android -->
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="TinyBeacon">
-                <param name="android-package" value="info.kyorohiro.TinyBeaconCordovaPlugin"/>
+                <param name="android-package" value="info.kyorohiro.tinybeacon.TinyBeaconCordovaPlugin"/>
             </feature>
         </config-file>
 

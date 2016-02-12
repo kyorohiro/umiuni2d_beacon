@@ -1,4 +1,6 @@
+
 var TinyBeacon = function() {
 }
 
-module.exports = TinyBeacon;
+module.exports.tinybeacon = TinyBeacon;
+
