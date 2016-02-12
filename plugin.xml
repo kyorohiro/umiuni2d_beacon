@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+    id="info.kyorohiro.cordova.tinybeacon"
+    version="0.0.1">
+    <name>TinyBeacon Plugin</name>
+    <description>xxx</description>
+    <license>Apache 2.0</license>
+    <keywords>cordova,ibeacon</keywords>
+    <repo>https://github.com/kyorohiro/cordova-plugin-hello.git</repo>
+
+    <js-module src="www/tinybeacon.js" name="TinyBeacon">
+      <!--clobbers target="cordova.plugins" /-->
+    </js-module>
+
+    <!-- android -->
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="TinyBeacon">
+                <param name="android-package" value="info.kyorohiro.TinyBeaconCordovaPlugin"/>
+            </feature>
+        </config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/manifest">
+	  <uses-permission android:name="android.permission.BLUETOOTH" />
+          <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+	  <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+        </config-file>
+
+
+        <source-file src="src/android/TinyAdStructure.java" target-dir="src/info/kyorohiro/tinybeacon" />
+        <source-file src="src/android/TinyBeacon.java" target-dir="src/info/kyorohiro/tinybeacon" />
+        <source-file src="src/android/TinyBeaconCordovaPlugin.java" target-dir="src/info/kyorohiro/tinybeacon" />
+    </platform>
+
+</plugin>
+
