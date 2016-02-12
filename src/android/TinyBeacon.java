@@ -19,10 +19,7 @@ import org.json.JSONObject;
 
 public class TinyBeacon {
 
-
-    //private List<TinyAdStructure> mFouncediBeacon = new LinkedList<TinyAdStructure>();
     private Map<TinyAdStructure, TinyAdStructureEx> mFouncediBeacon = new LinkedHashMap();
-
     private ScanCallback mCurrentScanCallback = null;
     private BluetoothManager mBluetoothManager = null;
     private BluetoothLeScanner mScanner = null;
@@ -62,6 +59,11 @@ public class TinyBeacon {
         ret.put("founded", new JSONArray(t));
         return ret.toString();
     }
+
+    public void clearFoundedBeeacon() throws JSONException {
+        mFouncediBeacon.clear();
+    }
+
     //
     //
     //

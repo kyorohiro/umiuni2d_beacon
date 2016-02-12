@@ -21,8 +21,11 @@ public class TinyBeaconCordovaPlugin extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         android.util.Log.v("KY", "### " + action + ", " + args);
         if("requestPermissions".equals(action)) {
+            android.util.Log.v("KY", "##A# ");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                android.util.Log.v("KY", "##B# ");
                 cordova.getActivity().requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+                android.util.Log.v("KY", "##C# ");
             }
             callbackContext.success();
         } else if("startLescan".equals(action)) {
@@ -33,8 +36,10 @@ public class TinyBeaconCordovaPlugin extends CordovaPlugin {
             callbackContext.success();
         } else if("getFoundBeacon".equals(action)) {
             callbackContext.success(beacon.getFoundedBeeaconAsJSONText());
-        }
-        else {
+        } else if("clearFoundBeacon".equals(action)) {
+            beacon.clearFoundedBeeacon();
+            callbackContext.success();
+        } else {
             PluginResult result = new PluginResult(PluginResult.Status.OK, "AAA");
             result.setKeepCallback(true);
             callbackContext.sendPluginResult(result);
