@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+ <?xml version="1.0" encoding="UTF-8"?>
 
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
     id="info.kyorohiro.tinybeacon"
@@ -33,6 +33,13 @@
         <source-file src="src/android/TinyAdStructure.java" target-dir="src/info/kyorohiro/tinybeacon" />
         <source-file src="src/android/TinyBeacon.java" target-dir="src/info/kyorohiro/tinybeacon" />
         <source-file src="src/android/TinyBeaconCordovaPlugin.java" target-dir="src/info/kyorohiro/tinybeacon" />
+
+        <config-file target="*-Info.plist" parent="NSLocationAlwaysUsageDescription">
+            <string>This app would like to scan iBeacons in the background.</string>
+        </config-file>
+        <config-file target="*-Info.plist" parent="NSLocationWhenInUseUsageDescription">
+            <string>This app would like to scan iBeacons.</string>
+        </config-file>
     </platform>
 
     <!-- ios -->
