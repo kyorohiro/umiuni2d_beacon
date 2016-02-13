@@ -69,10 +69,35 @@
     NSLog(@"###### init");
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
-    self.region = nil;
     self.beaconInfos = [[NSMutableArray alloc] init];
-    // self.beaconInfos con
 }
+
+
+- (TinyBeaconInfo*) getTinyBeaconInfoFromBeaconRegion: (CLBeaconRegion*) region {
+    for(TinyBeaconInfo *i in self.beaconInfos) {
+        if([i.region isEqual:region] == YES) {
+            return i;
+        }
+    }
+    return nil;
+}
+
+- (TinyBeaconInfo*) getTinyBeaconInfoFromBeaconFromUUID: (NSString*) uuid major:(NSNumber*)major minor:(NSNumber*)minor {
+    for(TinyBeaconInfo *i in self.beaconInfos) {
+        if([[i.region.proximityUUID UUIDString] isEqual:uuid] == NO) {
+            continue;
+        }
+        if([[i.region major] intValue] != [major intValue]) {
+            continue;
+        }
+        if([[i.region minor] intValue] != [minor intValue]) {
+            continue;
+        }
+        return i;
+    }
+    return nil;
+}
+
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
 {
@@ -87,16 +112,35 @@
 - (void)locationManager:(CLLocationManager *)manager didEnterRegion:(CLRegion *)region
 {
     NSLog(@"### didEnterRegion %@",[[(CLBeaconRegion *)region proximityUUID] UUIDString]);
+    
     if ([region isMemberOfClass:[CLBeaconRegion class]] && [CLLocationManager isRangingAvailable]) {
+        //
+        //
+        TinyBeaconInfo *info = [self getTinyBeaconInfoFromBeaconRegion:(CLBeaconRegion*)region];
+        if(info == nil){
+            info = [[TinyBeaconInfo alloc] initWithBeaconRegion:(CLBeaconRegion*)region];
+            [self.beaconInfos addObject:info];
+        }
+        //
         [self.locationManager startRangingBeaconsInRegion:(CLBeaconRegion*)region];
+        //
+        info.found = @YES;
+        info.isRanging= @YES;
     }
 }
 
 - (void)locationManager:(CLLocationManager *)manager didExitRegion:(CLRegion *)region
 {
     NSLog(@"### didExitRegion %@",[[(CLBeaconRegion *)region proximityUUID] UUIDString]);
+    
     if ([region isMemberOfClass:[CLBeaconRegion class]] && [CLLocationManager isRangingAvailable]) {
         [self.locationManager stopRangingBeaconsInRegion:(CLBeaconRegion*)region];
+        //
+        //
+        TinyBeaconInfo *info = [self getTinyBeaconInfoFromBeaconRegion:(CLBeaconRegion*)region];
+        if(info != nil){
+            info.isRanging = @NO;
+        }
     }
 }
 
@@ -117,35 +161,42 @@
         return;
     }
     
-    NSString *arg = command.arguments[0];
-    NSLog(@"#A# %@",arg);
-    {
-        NSData *data = [arg dataUsingEncoding:NSUTF8StringEncoding];
-        id obj = [NSJSONSerialization JSONObjectWithData:data
-                                                 options:NSJSONReadingMutableContainers error:nil];
-        NSLog(@"#B# %@",obj);
-    }
-    NSData *data = [arg dataUsingEncoding:NSUTF8StringEncoding];
+    NSData *data = [command.arguments[0] dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary* v = [NSJSONSerialization JSONObjectWithData:data
                                                       options:NSJSONReadingAllowFragments error:nil];
     NSLog(@"#C# %@", [v objectForKey:@"beacons"]);
     NSArray* beacons = [v objectForKey:@"beacons"];
     
     for(NSDictionary* d in beacons) {
-        NSUUID * uuid = [[NSUUID alloc] initWithUUIDString:[d objectForKey:@"uuid"]];
-        self.region = [[CLBeaconRegion alloc] initWithProximityUUID:uuid identifier:@"xxx"];
-        [self.locationManager startMonitoringForRegion:self.region];
-        break;
+        //
+        TinyBeaconInfo *info =[self getTinyBeaconInfoFromBeaconFromUUID:(NSString*)[d objectForKey:@"uuid"]
+                                                                  major:nil
+                                                                  minor:nil];
+        if(info == nil) {
+            info =[[TinyBeaconInfo alloc] initWithUUID:[d objectForKey:@"uuid"]];
+            [self.beaconInfos addObject:info];
+        }
+
+        info.isMonitoring = @YES;
+        [self.locationManager startMonitoringForRegion:info.region];
+        //
+        NSLog(@"----------SSSS=----%@",[d objectForKey:@"uuid"]);
     }
-    
 }
 
 - (void)stopLescan:(CDVInvokedUrlCommand*) command
 {
     NSLog(@"###### stopLescan");
-    if(self.region != nil) {
-        [self.locationManager stopMonitoringForRegion:self.region];
-        self.region = nil;
+    
+    for (TinyBeaconInfo *info in self.beaconInfos) {
+        if(YES == info.isRanging.boolValue) {
+            [self.locationManager stopRangingBeaconsInRegion:info.region];
+            info.isRanging = @NO;
+        }
+        if(YES == info.isMonitoring.boolValue) {
+            [self.locationManager stopMonitoringForRegion:info.region];
+            info.isMonitoring = @NO;
+        }
     }
 }
 

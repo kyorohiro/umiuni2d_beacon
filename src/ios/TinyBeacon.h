@@ -12,17 +12,6 @@
 #import <Cordova/CDV.h>
 #import <CoreLocation/CoreLocation.h>
 
-@interface TinyBeacon : CDVPlugin <CLLocationManagerDelegate>
-@property (nonatomic, strong) CLBeaconRegion *region;
-@property (nonatomic, strong) CLLocationManager *locationManager;
-@property (nonatomic, strong) NSMutableArray *beaconInfos;
-- (void)startLescan:(CDVInvokedUrlCommand*) command;
-- (void)stopLescan:(CDVInvokedUrlCommand*) command;
-- (void)requestPermissions:(CDVInvokedUrlCommand*) command;
-- (void)getFoundBeacon:(CDVInvokedUrlCommand*) command;
-- (void)clearFoundedBeacon:(CDVInvokedUrlCommand*) command;
-@end
-
 
 @interface TinyBeaconInfo : NSObject
 @property (nonatomic, strong) CLBeaconRegion *region;
@@ -35,6 +24,19 @@
 - (id)initWithBeaconRegion:(CLBeaconRegion*) regision;
 - (id)free;
 - (BOOL) isEqual:(id)other;
+@end
+
+
+@interface TinyBeacon : CDVPlugin <CLLocationManagerDelegate>
+@property (nonatomic, strong) CLLocationManager *locationManager;
+@property (nonatomic, strong) NSMutableArray *beaconInfos;
+- (void)startLescan:(CDVInvokedUrlCommand*) command;
+- (void)stopLescan:(CDVInvokedUrlCommand*) command;
+- (void)requestPermissions:(CDVInvokedUrlCommand*) command;
+- (void)getFoundBeacon:(CDVInvokedUrlCommand*) command;
+- (void)clearFoundedBeacon:(CDVInvokedUrlCommand*) command;
+- (TinyBeaconInfo*) getTinyBeaconInfoFromBeaconRegion: (CLBeaconRegion*) region;
+- (TinyBeaconInfo*) getTinyBeaconInfoFromBeaconFromUUID: (NSString*) uuid major:(NSNumber*)major minor:(NSNumber*)minor;
 @end
 
 #endif /* TinyBeacon_h */
