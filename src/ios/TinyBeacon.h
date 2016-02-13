@@ -32,7 +32,9 @@
 @property (nonatomic, strong) NSNumber *isMonitoring;
 @property (nonatomic, strong) NSNumber *isRanging;
 - (id)initWithUUID:(NSString*)uuid;
+- (id)initWithBeaconRegion:(CLBeaconRegion*) regision;
 - (id)free;
 - (BOOL) isEqual:(id)other;
 @end
+
 #endif /* TinyBeacon_h */
