@@ -13,6 +13,10 @@
 
 
 @interface TinyBeacon : CDVPlugin
-
+- (void)startLescan:(CDVInvokedUrlCommand*) command;
+- (void)stopLescan:(CDVInvokedUrlCommand*) command;
+- (void)requestPermissions:(CDVInvokedUrlCommand*) command;
+- (void)getFoundBeacon:(CDVInvokedUrlCommand*) command;
+- (void)clearFoundedBeacon:(CDVInvokedUrlCommand*) command;
 @end
 #endif /* TinyBeacon_h */
