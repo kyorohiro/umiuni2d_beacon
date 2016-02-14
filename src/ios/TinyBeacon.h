@@ -33,6 +33,7 @@
 - (TinyBeaconInfo*) putTinyBeaconInfo:(NSString*) uuid major:(NSNumber*)major minor:(NSNumber*)minor;
 - (TinyBeaconInfo*) getTinyBeaconInfoFromBeaconRegion: (CLBeaconRegion*) region;
 - (TinyBeaconInfo*) getTinyBeaconInfoFromBeaconFromUUID: (NSString*) uuid major:(NSNumber*)major minor:(NSNumber*)minor;
+- (NSString*) getFoundedBeaconInfo;
 @end
 
 @interface TinyBeacon : CDVPlugin <CLLocationManagerDelegate>

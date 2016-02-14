@@ -124,7 +124,7 @@
 
 - (void)getFoundBeacon:(CDVInvokedUrlCommand*) command
 {
-    NSLog(@"###### getFoundBeacon");
+    NSLog(@"###### getFoundBeacon %@",[self.beaconInfos getFoundedBeaconInfo]);
 }
 
 - (void)clearFoundedBeacon:(CDVInvokedUrlCommand*) command

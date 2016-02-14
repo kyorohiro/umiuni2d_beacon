@@ -58,4 +58,27 @@
     return info;
 }
 
+- (NSString*) getFoundedBeaconInfo {
+    NSMutableDictionary *root = [@{} mutableCopy];
+    NSMutableArray *beacons = [@[] mutableCopy];
+    for(TinyBeaconInfo* info in self.beaconInfos) {
+        NSString *uuid = [[[info region] proximityUUID] UUIDString];
+        NSObject *major = [[info region] major];
+        NSObject *minor = [[info region] minor];
+        if(major == nil) {
+            major =[NSNull null];
+        }
+        if(minor == nil) {
+            minor =[NSNull null];
+        }
+        NSDictionary *b = @{@"uuid":uuid, @"major":major, @"minor":minor};
+        [beacons addObject:b];
+    }
+    root [@"beacons"] = beacons;
+
+    //
+    NSData*data=[NSJSONSerialization dataWithJSONObject:root options:2 error:nil];
+    NSString*jsonstr=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    return jsonstr;
+}
 @end
