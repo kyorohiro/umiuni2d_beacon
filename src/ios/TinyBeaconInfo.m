@@ -26,7 +26,19 @@
     self.isRanging = @NO;
     self.isMonitoring = @NO;
     self.proximity = @0;
+    nullRangingCount = 0;
     return self;
+}
+- (int) getNullRangingCount {
+    return nullRangingCount;
+}
+
+- (void) addNullRangingCount {
+    nullRangingCount++;
+}
+
+- (void) clearNullRangingCount {
+    nullRangingCount = 0;
 }
 
 - (id)initWithBeaconRegion:(CLBeaconRegion*) regision {

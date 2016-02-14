@@ -18,11 +18,22 @@
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     self.beaconInfos = [[TinyBeacinInfoList alloc] init];
+    self.requestPermissionCallBackId = nil;
 }
 
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status{
     NSLog(@"### didChangeAuthorizationStatus");
+    if(self.requestPermissionCallBackId != nil) {
+        if(status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusNotDetermined) {
+            CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+            [self.commandDelegate sendPluginResult:r callbackId:self.requestPermissionCallBackId];
+        } else {
+            CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            [self.commandDelegate sendPluginResult:r callbackId:self.requestPermissionCallBackId];
+        }
+    }
+    self.requestPermissionCallBackId = nil;
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
@@ -41,6 +52,7 @@
         //
         info.inRegion = @YES;
         info.isRanging= @YES;
+        [info clearNullRangingCount];
     }
 }
 
@@ -66,7 +78,9 @@
     if([beacons count] == 0) {
         TinyBeaconInfo *info = [self.beaconInfos getTinyBeaconInfoFromBeaconRegion:region];
         if(info != nil) {
-            if([[info inRegion] boolValue] != YES && [[info isRanging] boolValue] == YES) {
+            [info addNullRangingCount];
+            if([[info inRegion] boolValue] != YES && [[info isRanging] boolValue] == YES &&
+               [info getNullRangingCount] > 5) {
                 [self.locationManager stopRangingBeaconsInRegion:info.region];
             }
         }
@@ -86,8 +100,9 @@
         info.rssi = [NSNumber numberWithInt:(int)[b rssi]];
         info.proximity = [NSNumber numberWithInt:(int)[b proximity]];
         info.time = [NSNumber numberWithInt:timestamp];
+        [info clearNullRangingCount];
     }
-    
+
 }
 
 - (void)startLescan:(CDVInvokedUrlCommand*) command
@@ -139,9 +154,32 @@
 - (void)requestPermissions:(CDVInvokedUrlCommand*) command
 {
     NSLog(@"###### requestPermissions");
-    if (floor(NSFoundationVersionNumber) >= NSFoundationVersionNumber_iOS_8_0) {
-        //    self.locationManager.requestWhenInUseAuthorization
-        [self.locationManager requestAlwaysAuthorization];
+    if(self.requestPermissionCallBackId != nil) {
+        @try {
+            CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+            [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
+        }
+        @catch (NSException *exception) {
+        }
+        @finally {
+            self.requestPermissionCallBackId = nil;
+        }
+    }
+    
+    
+    @try {
+        if (floor(NSFoundationVersionNumber) >= NSFoundationVersionNumber_iOS_8_0) {
+            //    self.locationManager.requestWhenInUseAuthorization
+            [self.locationManager requestAlwaysAuthorization];
+            self.requestPermissionCallBackId = command.callbackId;
+        } else {
+            CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+            [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
+        }
+    }
+    @catch (NSException *exception) {
+        CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+        [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
     }
 }
 

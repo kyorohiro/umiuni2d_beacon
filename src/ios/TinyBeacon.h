@@ -14,6 +14,9 @@
 
 
 @interface TinyBeaconInfo : NSObject
+{
+    int nullRangingCount;
+}
 @property (nonatomic, strong) CLBeaconRegion *region;
 @property (nonatomic, strong) NSNumber *time;
 @property (nonatomic, strong) NSNumber *rssi;
@@ -27,6 +30,10 @@
 - (id)initWithBeaconRegion:(CLBeaconRegion*) regision;
 - (id)free;
 - (BOOL) isEqual:(id)other;
+- (int) getNullRangingCount;
+- (void) addNullRangingCount;
+- (void) clearNullRangingCount;
+
 @end
 
 @interface TinyBeacinInfoList : NSObject
@@ -41,6 +48,7 @@
 @end
 
 @interface TinyBeacon : CDVPlugin <CLLocationManagerDelegate>
+@property (nonatomic, strong) NSString* requestPermissionCallBackId;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) TinyBeacinInfoList *beaconInfos;
 - (void)startLescan:(CDVInvokedUrlCommand*) command;
