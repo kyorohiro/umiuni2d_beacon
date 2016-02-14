@@ -10,14 +10,22 @@
 #import "TinyBeacon.h"
 
 @implementation TinyBeaconInfo
-- (id)initWithUUID:(NSString*)uuid {
+
+- (id)initWithUUID:(NSString*)uuid major:(NSNumber*)major minor:(NSNumber*)minor {
     NSUUID * uuidObj = [[NSUUID alloc] initWithUUIDString:uuid];
-    self.region = [[CLBeaconRegion alloc] initWithProximityUUID:uuidObj identifier:@"xxx"];
+    if(major == nil && minor == nil) {
+      self.region = [[CLBeaconRegion alloc] initWithProximityUUID:uuidObj identifier:@"xxx"];
+    } else if(major != nil && minor == nil) {
+        self.region = [[CLBeaconRegion alloc] initWithProximityUUID:uuidObj major:[major intValue] identifier:@"xxx"];
+    } else {
+        self.region = [[CLBeaconRegion alloc] initWithProximityUUID:uuidObj major:[major intValue] minor:[minor intValue] identifier:@"xxx"];
+    }
     self.rssi = @0;
     self.time = @0L;
     self.found = @NO;
     self.isRanging = @NO;
     self.isMonitoring = @NO;
+    self.proximity = @0;
     return self;
 }
 

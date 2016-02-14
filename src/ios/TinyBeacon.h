@@ -20,7 +20,10 @@
 @property (nonatomic, strong) NSNumber *found;
 @property (nonatomic, strong) NSNumber *isMonitoring;
 @property (nonatomic, strong) NSNumber *isRanging;
-- (id)initWithUUID:(NSString*)uuid;
+@property (nonatomic, strong) NSNumber *inRegion;
+@property (nonatomic, strong) NSNumber *proximity;
+
+- (id)initWithUUID:(NSString*)uuid major:(NSNumber*)major minor:(NSNumber*)minor;
 - (id)initWithBeaconRegion:(CLBeaconRegion*) regision;
 - (id)free;
 - (BOOL) isEqual:(id)other;

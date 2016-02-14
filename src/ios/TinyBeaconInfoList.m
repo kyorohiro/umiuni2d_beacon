@@ -41,9 +41,9 @@
 }
 
 - (TinyBeaconInfo*) putTinyBeaconInfo:(NSString*) uuid major:(NSNumber*)major minor:(NSNumber*)minor {
-    TinyBeaconInfo *info =[self getTinyBeaconInfoFromBeaconFromUUID:uuid major:nil minor:nil];
+    TinyBeaconInfo *info =[self getTinyBeaconInfoFromBeaconFromUUID:uuid major:major minor:minor];
     if(info == nil) {
-        info =[[TinyBeaconInfo alloc] initWithUUID:uuid];
+        info =[[TinyBeaconInfo alloc] initWithUUID:uuid major:major minor:minor];
         [self.beaconInfos addObject:info];
     }
     return info;
@@ -62,20 +62,37 @@
     NSMutableDictionary *root = [@{} mutableCopy];
     NSMutableArray *beacons = [@[] mutableCopy];
     for(TinyBeaconInfo* info in self.beaconInfos) {
+        if(info.found.boolValue != YES) {
+            continue;
+        }
         NSString *uuid = [[[info region] proximityUUID] UUIDString];
         NSObject *major = [[info region] major];
         NSObject *minor = [[info region] minor];
+        NSObject *proximity = [info proximity];
+        NSObject *rssi = [info rssi];
+        NSObject *time = [info time];
         if(major == nil) {
             major =[NSNull null];
         }
         if(minor == nil) {
             minor =[NSNull null];
         }
-        NSDictionary *b = @{@"uuid":uuid, @"major":major, @"minor":minor};
+        if(proximity == nil) {
+            proximity =[NSNull null];
+        }
+        if(rssi == nil) {
+            rssi =[NSNull null];
+        }
+        if(time == nil) {
+            time =[NSNull null];
+        }
+        NSDictionary *b = @{@"uuid":uuid, @"major":major, @"minor":minor, @"proximity":proximity, @"rssi" : rssi, @"time":time};
         [beacons addObject:b];
     }
     root [@"beacons"] = beacons;
-
+    int timestamp = [[NSDate date] timeIntervalSince1970];
+    root [@"time"] = [NSNumber numberWithInt:timestamp];
+  
     //
     NSData*data=[NSJSONSerialization dataWithJSONObject:root options:2 error:nil];
     NSString*jsonstr=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
