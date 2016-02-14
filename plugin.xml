@@ -52,6 +52,7 @@
         <header-file src="src/ios/TinyBeacon.h"/>
         <source-file src="src/ios/TinyBeacon.m"/>
         <source-file src="src/ios/TinyBeaconInfo.m"/>
+        <source-file src="src/ios/TinyBeaconInfoList.m"/>
         <framework src="CoreBluetooth.framework" />
         <framework src="CoreLocation.framework" />
     </platform>
