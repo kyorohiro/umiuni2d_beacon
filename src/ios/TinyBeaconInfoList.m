@@ -58,7 +58,7 @@
     return info;
 }
 
-- (NSString*) getFoundedBeaconInfo {
+- (NSString*) getFoundBeaconInfo {
     NSMutableDictionary *root = [@{} mutableCopy];
     NSMutableArray *beacons = [@[] mutableCopy];
     for(TinyBeaconInfo* info in self.beaconInfos) {
@@ -97,5 +97,9 @@
     NSData*data=[NSJSONSerialization dataWithJSONObject:root options:2 error:nil];
     NSString*jsonstr=[[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
     return jsonstr;
+}
+
+- (void) clearFoundBeaconInfo {
+    [self.beaconInfos removeAllObjects];
 }
 @end

@@ -36,7 +36,8 @@
 - (TinyBeaconInfo*) putTinyBeaconInfo:(NSString*) uuid major:(NSNumber*)major minor:(NSNumber*)minor;
 - (TinyBeaconInfo*) getTinyBeaconInfoFromBeaconRegion: (CLBeaconRegion*) region;
 - (TinyBeaconInfo*) getTinyBeaconInfoFromBeaconFromUUID: (NSString*) uuid major:(NSNumber*)major minor:(NSNumber*)minor;
-- (NSString*) getFoundedBeaconInfo;
+- (NSString*) getFoundBeaconInfo;
+- (void) clearFoundBeaconInfo;
 @end
 
 @interface TinyBeacon : CDVPlugin <CLLocationManagerDelegate>
@@ -46,7 +47,7 @@
 - (void)stopLescan:(CDVInvokedUrlCommand*) command;
 - (void)requestPermissions:(CDVInvokedUrlCommand*) command;
 - (void)getFoundBeacon:(CDVInvokedUrlCommand*) command;
-- (void)clearFoundedBeacon:(CDVInvokedUrlCommand*) command;
+- (void)clearFoundBeacon:(CDVInvokedUrlCommand*) command;
 @end
 
 

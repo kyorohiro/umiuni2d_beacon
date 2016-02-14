@@ -21,13 +21,11 @@
 }
 
 
-- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status
-{
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status{
     NSLog(@"### didChangeAuthorizationStatus");
 }
 
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
-{
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
     NSLog(@"### didUpdateLocations");
 }
 
@@ -149,12 +147,34 @@
 
 - (void)getFoundBeacon:(CDVInvokedUrlCommand*) command
 {
-    NSLog(@"###### getFoundBeacon %@",[self.beaconInfos getFoundedBeaconInfo]);
+    @try {
+        NSString* result =[self.beaconInfos getFoundBeaconInfo];
+        NSLog(@"###### getFoundBeacon %@",result);
+        CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:result];
+        [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
+    }
+    @catch (NSException *exception) {
+        CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+        [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
+    }
+    @finally {
+    }
 }
 
-- (void)clearFoundedBeacon:(CDVInvokedUrlCommand*) command
+- (void)clearFoundBeacon:(CDVInvokedUrlCommand*) command
 {
     NSLog(@"###### clearFoundedBeacon");
+    @try {
+        [self.beaconInfos clearFoundBeaconInfo];
+        CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+        [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
+    }
+    @catch (NSException *exception) {
+        CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+        [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
+    }
+    @finally {
+    }
 }
 
 
