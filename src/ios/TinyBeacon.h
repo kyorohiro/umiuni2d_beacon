@@ -26,17 +26,24 @@
 - (BOOL) isEqual:(id)other;
 @end
 
+@interface TinyBeacinInfoList : NSObject
+@property (nonatomic, strong) NSMutableArray *beaconInfos;
+- (id) init;
+- (TinyBeaconInfo*) putTinyBeaconInfoFromBeaconRegion: (CLBeaconRegion*) region;
+- (TinyBeaconInfo*) putTinyBeaconInfo:(NSString*) uuid major:(NSNumber*)major minor:(NSNumber*)minor;
+- (TinyBeaconInfo*) getTinyBeaconInfoFromBeaconRegion: (CLBeaconRegion*) region;
+- (TinyBeaconInfo*) getTinyBeaconInfoFromBeaconFromUUID: (NSString*) uuid major:(NSNumber*)major minor:(NSNumber*)minor;
+@end
 
 @interface TinyBeacon : CDVPlugin <CLLocationManagerDelegate>
 @property (nonatomic, strong) CLLocationManager *locationManager;
-@property (nonatomic, strong) NSMutableArray *beaconInfos;
+@property (nonatomic, strong) TinyBeacinInfoList *beaconInfos;
 - (void)startLescan:(CDVInvokedUrlCommand*) command;
 - (void)stopLescan:(CDVInvokedUrlCommand*) command;
 - (void)requestPermissions:(CDVInvokedUrlCommand*) command;
 - (void)getFoundBeacon:(CDVInvokedUrlCommand*) command;
 - (void)clearFoundedBeacon:(CDVInvokedUrlCommand*) command;
-- (TinyBeaconInfo*) getTinyBeaconInfoFromBeaconRegion: (CLBeaconRegion*) region;
-- (TinyBeaconInfo*) getTinyBeaconInfoFromBeaconFromUUID: (NSString*) uuid major:(NSNumber*)major minor:(NSNumber*)minor;
 @end
+
 
 #endif /* TinyBeacon_h */
