@@ -80,14 +80,13 @@ public class TinyBeacon {
             List<TinyAdPacket> ad = TinyAdPacket.parse(result.getScanRecord().getBytes());
             for(TinyAdPacket a : ad){
                 if(TinyIBeaconPacket.isIBeacon(a)) {
-                    android.util.Log.v("KY", "uuid:" + TinyIBeaconPacket.getUUIDAsIBeacon(a) + ", major:" + TinyIBeaconPacket.getMajorAsIBeacon(a) + ", minor:" + TinyIBeaconPacket.getMinorAsIBeacon(a) + ",crssi:" + TinyIBeaconPacket.getCalibratedRSSIAsIBeacon(a));
-                    if(false == mParent.mFoundIBeacon.contains(a)) {
+                    android.util.Log.v("KY", "uuid:" + TinyIBeaconPacket.getUUIDHexStringAsIBeacon(a) + ", major:" + TinyIBeaconPacket.getMajorAsIBeacon(a) + ", minor:" + TinyIBeaconPacket.getMinorAsIBeacon(a) + ",crssi:" + TinyIBeaconPacket.getCalibratedRSSIAsIBeacon(a));
+                    TinyBeaconInfo i = TinyBeaconInfo.containes(mParent.mFoundIBeacon, a);
+                    if(null == i) {
                         TinyBeaconInfo ex = new TinyBeaconInfo(a, result.getRssi(), t);
                         mParent.mFoundIBeacon.add(ex);
                     } else {
-                        int i = mParent.mFoundIBeacon.indexOf(a);
-                        TinyBeaconInfo ex = mParent.mFoundIBeacon.get(i);
-                        ex.update(result.getRssi(), t);
+                        i.update(result.getRssi(), t);
                     }
                 }
             }

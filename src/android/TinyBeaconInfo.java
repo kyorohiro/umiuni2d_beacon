@@ -18,6 +18,7 @@ class TinyBeaconInfo {
         this.time = _time;
         this.packet = _packet;
         this.smartRssi = _rssi;
+        this.proximity = TinyIBeaconPacket.getProximity(packet, smartRssi, 0);
     }
 
     void update(int _rssi, long _time) {
@@ -59,8 +60,20 @@ class TinyBeaconInfo {
         return "none";
     }
 
+    static TinyBeaconInfo containes(java.util.List<TinyBeaconInfo> list, TinyAdPacket packet) {
+        for(TinyBeaconInfo i : list) {
+            if(packet.equals(i.packet)) {
+                return i;
+            }
+        }
+        return null;
+    }
+
     @Override
     public boolean equals(Object o) {
+        if(o instanceof TinyBeaconInfo) {
+            o = ((TinyBeaconInfo) o).packet;
+        }
         return packet.equals(o);
     }
 
