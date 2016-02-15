@@ -6,6 +6,31 @@ import java.nio.ByteBuffer;
  * Created by kyorohiro on 2016/02/16.
  */
 public class TinyIBeaconPacket {
+    static final int PROXIMITY_NONE = 4;
+    static final int PROXIMITY_IMMEDIATE = 1;
+    static final int PROXIMITY_NEAR = 2;
+    static final int PROXIMITY_FAR = 3;
+    static final int PROXIMITY_UNKNOWN = 4;
+
+    static int getProximity(TinyAdPacket packet, double rssi, int currentState) {
+        double d = distance(packet, rssi);
+        if(d < 0.25) {
+            return PROXIMITY_IMMEDIATE;
+        }
+        if(currentState == PROXIMITY_IMMEDIATE || currentState == PROXIMITY_NEAR) {
+            if(d < 2.0) {
+                return PROXIMITY_NEAR;
+            } else {
+                return PROXIMITY_FAR;
+            }
+        } else {
+            if(d < 1.25) {
+                return PROXIMITY_NEAR;
+            } else {
+                return PROXIMITY_FAR;
+            }
+        }
+    }
 
     //
     // TODO create iBeacon class & functionry method
