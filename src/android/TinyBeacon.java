@@ -17,7 +17,7 @@ import org.json.JSONObject;
 
 public class TinyBeacon {
 
-    private List<TinyAdStructureEx> mFoundIBeacon = new LinkedList<TinyAdStructureEx>();
+    private List<TinyBeaconInfo> mFoundIBeacon = new LinkedList<TinyBeaconInfo>();
     private ScanCallback mCurrentScanCallback = null;
     private BluetoothManager mBluetoothManager = null;
     private BluetoothLeScanner mScanner = null;
@@ -43,14 +43,14 @@ public class TinyBeacon {
         }
     }
 
-    public List<TinyAdStructureEx> getFoundedBeeacon() {
+    public List<TinyBeaconInfo> getFoundedBeeacon() {
         return mFoundIBeacon;
     }
 
     public String getFoundedBeeaconAsJSONText() throws JSONException {
         JSONObject ret = new JSONObject();
         List<JSONObject> t = new LinkedList<JSONObject>();
-        for(TinyAdStructureEx e: mFoundIBeacon) {
+        for(TinyBeaconInfo e: mFoundIBeacon) {
             t.add(e.toJsonString());
         }
         ret.put("founded", new JSONArray(t));
@@ -61,40 +61,6 @@ public class TinyBeacon {
         mFoundIBeacon.clear();
     }
 
-    //
-    //
-    //
-    static class TinyAdStructureEx {
-        int rssi;
-        long time;
-        TinyAdPacket packet;
-        TinyAdStructureEx(TinyAdPacket _packet, int _rssi, long _time) {
-            this.rssi = _rssi;
-            this.time = _time;
-            this.packet = _packet;
-        }
-
-        JSONObject toJsonString() throws JSONException {
-            JSONObject ret = new JSONObject();
-            ret.put("uuid", TinyIBeaconPacket.getUUIDHexStringAsIBeacon(packet));
-            ret.put("major", TinyIBeaconPacket.getMajorAsIBeacon(packet));
-            ret.put("minor", TinyIBeaconPacket.getMinorAsIBeacon(packet));
-            ret.put("calrssi", TinyIBeaconPacket.getCalibratedRSSIAsIBeacon(packet));
-            ret.put("rssi", rssi);
-            ret.put("time", time);
-            return ret;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            return packet.equals(0);
-        }
-
-        @Override
-        public int hashCode() {
-            return packet.hashCode();
-        }
-    }
 
     //
     //
@@ -116,11 +82,11 @@ public class TinyBeacon {
                 if(TinyIBeaconPacket.isIBeacon(a)) {
                     android.util.Log.v("KY", "uuid:" + TinyIBeaconPacket.getUUIDAsIBeacon(a) + ", major:" + TinyIBeaconPacket.getMajorAsIBeacon(a) + ", minor:" + TinyIBeaconPacket.getMinorAsIBeacon(a) + ",crssi:" + TinyIBeaconPacket.getCalibratedRSSIAsIBeacon(a));
                     if(false == mParent.mFoundIBeacon.contains(a)) {
-                        TinyAdStructureEx ex = new TinyAdStructureEx(a, result.getRssi(), t);
+                        TinyBeaconInfo ex = new TinyBeaconInfo(a, result.getRssi(), t);
                         mParent.mFoundIBeacon.add(ex);
                     } else {
                         int i = mParent.mFoundIBeacon.indexOf(a);
-                        TinyAdStructureEx ex = mParent.mFoundIBeacon.get(i);
+                        TinyBeaconInfo ex = mParent.mFoundIBeacon.get(i);
                         ex.rssi = result.getRssi();
                         ex.time = t;
                     }

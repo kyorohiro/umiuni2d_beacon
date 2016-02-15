@@ -33,6 +33,7 @@
         <source-file src="src/android/TinyAdPacket.java" target-dir="src/info/kyorohiro/tinybeacon" />
 	<source-file src="src/android/TinyIBeaconPacket.java" target-dir="src/info/kyorohiro/tinybeacon" />
         <source-file src="src/android/TinyBeacon.java" target-dir="src/info/kyorohiro/tinybeacon" />
+        <source-file src="src/android/TinyBeaconInfo.java" target-dir="src/info/kyorohiro/tinybeacon" />
         <source-file src="src/android/TinyBeaconCordovaPlugin.java" target-dir="src/info/kyorohiro/tinybeacon" />
 
         <config-file target="*-Info.plist" parent="NSLocationAlwaysUsageDescription">
