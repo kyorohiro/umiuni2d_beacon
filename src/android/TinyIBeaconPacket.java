@@ -6,7 +6,7 @@ import java.nio.ByteBuffer;
  * Created by kyorohiro on 2016/02/16.
  */
 public class TinyIBeaconPacket {
-    static final int PROXIMITY_NONE = 4;
+    static final int PROXIMITY_NONE = 0;
     static final int PROXIMITY_IMMEDIATE = 1;
     static final int PROXIMITY_NEAR = 2;
     static final int PROXIMITY_FAR = 3;
@@ -18,7 +18,7 @@ public class TinyIBeaconPacket {
             return PROXIMITY_IMMEDIATE;
         }
         if(currentState == PROXIMITY_IMMEDIATE || currentState == PROXIMITY_NEAR) {
-            if(d < 2.0) {
+            if(d < 1.95) {
                 return PROXIMITY_NEAR;
             } else {
                 return PROXIMITY_FAR;

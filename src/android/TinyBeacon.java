@@ -8,10 +8,8 @@ import android.bluetooth.le.ScanCallback;
 import android.bluetooth.le.ScanResult;
 import android.content.Context;
 
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,7 +17,7 @@ import org.json.JSONObject;
 
 public class TinyBeacon {
 
-    private Map<TinyAdPacket, TinyAdStructureEx> mFouncediBeacon = new LinkedHashMap();
+    private List<TinyAdStructureEx> mFoundIBeacon = new LinkedList<TinyAdStructureEx>();
     private ScanCallback mCurrentScanCallback = null;
     private BluetoothManager mBluetoothManager = null;
     private BluetoothLeScanner mScanner = null;
@@ -45,23 +43,22 @@ public class TinyBeacon {
         }
     }
 
-    public Map<TinyAdPacket, TinyAdStructureEx> getFoundedBeeacon() {
-        return mFouncediBeacon;
+    public List<TinyAdStructureEx> getFoundedBeeacon() {
+        return mFoundIBeacon;
     }
 
     public String getFoundedBeeaconAsJSONText() throws JSONException {
         JSONObject ret = new JSONObject();
         List<JSONObject> t = new LinkedList<JSONObject>();
-        for(TinyAdPacket s: mFouncediBeacon.keySet()) {
-            TinyAdStructureEx e = mFouncediBeacon.get(s);
-            t.add(e.toJsonString(s));
+        for(TinyAdStructureEx e: mFoundIBeacon) {
+            t.add(e.toJsonString());
         }
         ret.put("founded", new JSONArray(t));
         return ret.toString();
     }
 
     public void clearFoundedBeeacon() throws JSONException {
-        mFouncediBeacon.clear();
+        mFoundIBeacon.clear();
     }
 
     //
@@ -70,22 +67,33 @@ public class TinyBeacon {
     static class TinyAdStructureEx {
         int rssi;
         long time;
-        TinyAdStructureEx(int _rssi, long _time) {
+        TinyAdPacket packet;
+        TinyAdStructureEx(TinyAdPacket _packet, int _rssi, long _time) {
             this.rssi = _rssi;
             this.time = _time;
+            this.packet = _packet;
         }
 
-        JSONObject toJsonString(TinyAdPacket ad) throws JSONException {
+        JSONObject toJsonString() throws JSONException {
             JSONObject ret = new JSONObject();
-            ret.put("uuid", TinyIBeaconPacket.getUUIDHexStringAsIBeacon(ad));
-            ret.put("major", TinyIBeaconPacket.getMajorAsIBeacon(ad));
-            ret.put("minor", TinyIBeaconPacket.getMinorAsIBeacon(ad));
-            ret.put("calrssi", TinyIBeaconPacket.getCalibratedRSSIAsIBeacon(ad));
+            ret.put("uuid", TinyIBeaconPacket.getUUIDHexStringAsIBeacon(packet));
+            ret.put("major", TinyIBeaconPacket.getMajorAsIBeacon(packet));
+            ret.put("minor", TinyIBeaconPacket.getMinorAsIBeacon(packet));
+            ret.put("calrssi", TinyIBeaconPacket.getCalibratedRSSIAsIBeacon(packet));
             ret.put("rssi", rssi);
             ret.put("time", time);
             return ret;
         }
 
+        @Override
+        public boolean equals(Object o) {
+            return packet.equals(0);
+        }
+
+        @Override
+        public int hashCode() {
+            return packet.hashCode();
+        }
     }
 
     //
@@ -107,11 +115,14 @@ public class TinyBeacon {
             for(TinyAdPacket a : ad){
                 if(TinyIBeaconPacket.isIBeacon(a)) {
                     android.util.Log.v("KY", "uuid:" + TinyIBeaconPacket.getUUIDAsIBeacon(a) + ", major:" + TinyIBeaconPacket.getMajorAsIBeacon(a) + ", minor:" + TinyIBeaconPacket.getMinorAsIBeacon(a) + ",crssi:" + TinyIBeaconPacket.getCalibratedRSSIAsIBeacon(a));
-                    if(false == mParent.mFouncediBeacon.containsKey(a)) {
-                        mParent.mFouncediBeacon.put(a,new TinyAdStructureEx(result.getRssi(), t));
+                    if(false == mParent.mFoundIBeacon.contains(a)) {
+                        TinyAdStructureEx ex = new TinyAdStructureEx(a, result.getRssi(), t);
+                        mParent.mFoundIBeacon.add(ex);
                     } else {
-                        mParent.mFouncediBeacon.get(a).rssi = result.getRssi();
-                        mParent.mFouncediBeacon.get(a).time = t;
+                        int i = mParent.mFoundIBeacon.indexOf(a);
+                        TinyAdStructureEx ex = mParent.mFoundIBeacon.get(i);
+                        ex.rssi = result.getRssi();
+                        ex.time = t;
                     }
                 }
             }
