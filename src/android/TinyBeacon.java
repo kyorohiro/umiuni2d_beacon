@@ -5,7 +5,9 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
+import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 
 import java.util.LinkedList;
@@ -30,8 +32,18 @@ public class TinyBeacon {
         BluetoothAdapter adapter = mBluetoothManager.getAdapter();
         mScanner = adapter.getBluetoothLeScanner();
         //
+        ScanSettings.Builder settingsBuilder = new ScanSettings.Builder();
+//        settingsBuilder.setCallbackType(0xff);
+        settingsBuilder.setScanMode(ScanSettings.SCAN_MODE_LOW_POWER);
         MyCallback callback = new MyCallback(this);
-        mScanner.startScan(callback);
+        final ScanFilter.Builder filterBuilder = new ScanFilter.Builder();
+        {
+            byte[] manData = new byte[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+            byte[] mask = new byte[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+            filterBuilder.setManufacturerData(76, manData, mask);
+        }
+        List l = new LinkedList(){{add(filterBuilder.build());}};
+        mScanner.startScan(l,settingsBuilder.build(), callback);
         mCurrentScanCallback = callback;
 
     }
@@ -75,12 +87,14 @@ public class TinyBeacon {
         @Override
         public void onScanResult(int callbackType, ScanResult result) {
             super.onScanResult(callbackType, result);
-//            android.util.Log.v("beacon", "###SA## scanResult type:" + callbackType + " ,result: " + result.toString());
+            //android.util.Log.v("beacon", "###SA## manu:" + result.getDevice().getType());
+            //android.util.Log.v("beacon", "###SA## manu:" +result.getScanRecord().getManufacturerSpecificData());
+            //android.util.Log.v("beacon", "###SA## scanResult type:" + callbackType + " ,result: " + result.toString());
             long t = System.currentTimeMillis();
             List<TinyAdPacket> ad = TinyAdPacket.parse(result.getScanRecord().getBytes());
             for(TinyAdPacket a : ad){
                 if(TinyIBeaconPacket.isIBeacon(a)) {
-                    android.util.Log.v("KY", "uuid:" + TinyIBeaconPacket.getUUIDHexStringAsIBeacon(a) + ", major:" + TinyIBeaconPacket.getMajorAsIBeacon(a) + ", minor:" + TinyIBeaconPacket.getMinorAsIBeacon(a) + ",crssi:" + TinyIBeaconPacket.getCalibratedRSSIAsIBeacon(a));
+                 //   android.util.Log.v("KY", "uuid:" + TinyIBeaconPacket.getUUIDHexStringAsIBeacon(a) + ", major:" + TinyIBeaconPacket.getMajorAsIBeacon(a) + ", minor:" + TinyIBeaconPacket.getMinorAsIBeacon(a) + ",crssi:" + TinyIBeaconPacket.getCalibratedRSSIAsIBeacon(a));
                     TinyBeaconInfo i = TinyBeaconInfo.containes(mParent.mFoundIBeacon, a);
                     if(null == i) {
                         TinyBeaconInfo ex = new TinyBeaconInfo(a, result.getRssi(), t);
