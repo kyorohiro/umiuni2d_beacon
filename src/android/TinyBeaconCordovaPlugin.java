@@ -1,5 +1,6 @@
 package info.kyorohiro.tinybeacon;
 
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import android.Manifest;
  */
 public class TinyBeaconCordovaPlugin extends CordovaPlugin {
     TinyBeacon beacon = new TinyBeacon();
+    CallbackContext callbackContextForRequestPermission = null;
 
     @Override
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
@@ -24,10 +26,24 @@ public class TinyBeaconCordovaPlugin extends CordovaPlugin {
             android.util.Log.v("KY", "##A# ");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 android.util.Log.v("KY", "##B# ");
-                cordova.getActivity().requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
-                android.util.Log.v("KY", "##C# ");
+                if(cordova.hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                    callbackContext.success();
+                } else {
+                    if(callbackContextForRequestPermission != null) {
+                        callbackContext.error("already requested");
+                        return true;
+                    } else {
+                        try {
+                            callbackContextForRequestPermission = callbackContext;
+//                cordova.getActivity().requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
+                            cordova.requestPermissions(this, 0, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION});
+                            android.util.Log.v("KY", "##C# ");
+                        } catch(Exception e) {
+                            callbackContextForRequestPermission = null;
+                        }
+                    }
+                }
             }
-            callbackContext.success();
         } else if("startLescan".equals(action)) {
             android.util.Log.v("KY", "##StartLescan# ");
             beacon.startLescan(this.cordova.getActivity().getApplicationContext());
@@ -51,5 +67,23 @@ public class TinyBeaconCordovaPlugin extends CordovaPlugin {
             callbackContext.success();
         }
         return true;
+    }
+    public void onRequestPermissionResult(int requestCode, String[] permissions,
+                                          int[] grantResults) throws JSONException {
+        if(callbackContextForRequestPermission == null) {
+            return;
+        }
+        try {
+            if (grantResults.length <= 0) {
+                callbackContextForRequestPermission.error("");
+            }
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                callbackContextForRequestPermission.success();
+            } else {
+                callbackContextForRequestPermission.error("");
+            }
+        } finally {
+            callbackContextForRequestPermission = null;
+        }
     }
 }
