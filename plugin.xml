@@ -30,7 +30,8 @@
         </config-file>
 
 
-        <source-file src="src/android/TinyAdStructure.java" target-dir="src/info/kyorohiro/tinybeacon" />
+        <source-file src="src/android/TinyAdPacket.java" target-dir="src/info/kyorohiro/tinybeacon" />
+	<source-file src="src/android/TinyIBeaconPacket.java" target-dir="src/info/kyorohiro/tinybeacon" />
         <source-file src="src/android/TinyBeacon.java" target-dir="src/info/kyorohiro/tinybeacon" />
         <source-file src="src/android/TinyBeaconCordovaPlugin.java" target-dir="src/info/kyorohiro/tinybeacon" />
 
