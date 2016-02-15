@@ -77,10 +77,10 @@ public class TinyBeacon {
 
         JSONObject toJsonString(TinyAdPacket ad) throws JSONException {
             JSONObject ret = new JSONObject();
-            ret.put("uuid", TinyIBeaconPacket.getUUIDHexStringAsiBeacon(ad));
-            ret.put("major", TinyIBeaconPacket.getMajorAsiBeacon(ad));
-            ret.put("minor", TinyIBeaconPacket.getMinorAsiBeacon(ad));
-            ret.put("calrssi", TinyIBeaconPacket.getCalibratedRSSIAsiBeacon(ad));
+            ret.put("uuid", TinyIBeaconPacket.getUUIDHexStringAsIBeacon(ad));
+            ret.put("major", TinyIBeaconPacket.getMajorAsIBeacon(ad));
+            ret.put("minor", TinyIBeaconPacket.getMinorAsIBeacon(ad));
+            ret.put("calrssi", TinyIBeaconPacket.getCalibratedRSSIAsIBeacon(ad));
             ret.put("rssi", rssi);
             ret.put("time", time);
             return ret;
@@ -105,8 +105,8 @@ public class TinyBeacon {
             long t = System.currentTimeMillis();
             List<TinyAdPacket> ad = TinyAdPacket.parse(result.getScanRecord().getBytes());
             for(TinyAdPacket a : ad){
-                if(TinyIBeaconPacket.isiBeacon(a)) {
-                    android.util.Log.v("KY", "uuid:" + TinyIBeaconPacket.getUUIDAsiBeacon(a) + ", major:" + TinyIBeaconPacket.getMajorAsiBeacon(a) + ", minor:" + TinyIBeaconPacket.getMinorAsiBeacon(a) + ",crssi:" + TinyIBeaconPacket.getCalibratedRSSIAsiBeacon(a));
+                if(TinyIBeaconPacket.isIBeacon(a)) {
+                    android.util.Log.v("KY", "uuid:" + TinyIBeaconPacket.getUUIDAsIBeacon(a) + ", major:" + TinyIBeaconPacket.getMajorAsIBeacon(a) + ", minor:" + TinyIBeaconPacket.getMinorAsIBeacon(a) + ",crssi:" + TinyIBeaconPacket.getCalibratedRSSIAsIBeacon(a));
                     if(false == mParent.mFouncediBeacon.containsKey(a)) {
                         mParent.mFouncediBeacon.put(a,new TinyAdStructureEx(result.getRssi(), t));
                     } else {

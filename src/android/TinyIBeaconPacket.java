@@ -10,7 +10,7 @@ public class TinyIBeaconPacket {
     //
     // TODO create iBeacon class & functionry method
     //
-    static boolean isiBeacon(TinyAdPacket packet) {
+    static boolean isIBeacon(TinyAdPacket packet) {
         if(packet.getAdType() != TinyAdPacket.ADTYPE_MANUFACTURE_SPECIFIC) {
             return false;
         }
@@ -40,40 +40,40 @@ public class TinyIBeaconPacket {
     // 200cm a-6
     // 400cm a-12
     static double distance(TinyAdPacket packet, double rssi) {
-        return Math.pow(10.0, (getCalibratedRSSIAsiBeacon(packet)-rssi)/20.0 );
+        return Math.pow(10.0, (getCalibratedRSSIAsIBeacon(packet)-rssi)/20.0 );
     }
 
-    static int getIdentifierAsiBeacon_00(TinyAdPacket packet) {
+    static int getIdentifierAsIBeacon_00(TinyAdPacket packet) {
         return 0xff & packet.getContent()[2];
     }
 
-    static int getIdentifierAsiBeacon_01(TinyAdPacket packet) {
+    static int getIdentifierAsIBeacon_01(TinyAdPacket packet) {
         return 0xff & packet.getContent()[3];
     }
 
-    static byte[] getUUIDAsiBeacon(TinyAdPacket packet) {
+    static byte[] getUUIDAsIBeacon(TinyAdPacket packet) {
         byte[] cont = packet.getContent();
         byte[] ret = new byte[16];
         System.arraycopy(cont,4,ret,0,ret.length);
         return ret;
     }
 
-    static int getMinorAsiBeacon(TinyAdPacket packet) {
+    static int getMinorAsIBeacon(TinyAdPacket packet) {
         byte[] cont = packet.getContent();
         return ByteBuffer.wrap(cont,20,2).getShort();
     }
 
-    static int getMajorAsiBeacon(TinyAdPacket packet) {
+    static int getMajorAsIBeacon(TinyAdPacket packet) {
         byte[] cont = packet.getContent();
         return ByteBuffer.wrap(cont,22,2).getShort();
     }
 
-    static int getCalibratedRSSIAsiBeacon(TinyAdPacket packet) {
+    static int getCalibratedRSSIAsIBeacon(TinyAdPacket packet) {
         return packet.getContent()[24];
     }
 
-    static String getUUIDHexStringAsiBeacon(TinyAdPacket packet) {
-        byte[] cont = getUUIDAsiBeacon(packet);
+    static String getUUIDHexStringAsIBeacon(TinyAdPacket packet) {
+        byte[] cont = getUUIDAsIBeacon(packet);
         StringBuilder builder = new StringBuilder();
         for(byte c : cont) {
             if(0xF < (c&0xff)) {
