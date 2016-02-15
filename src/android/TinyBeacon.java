@@ -87,8 +87,7 @@ public class TinyBeacon {
                     } else {
                         int i = mParent.mFoundIBeacon.indexOf(a);
                         TinyBeaconInfo ex = mParent.mFoundIBeacon.get(i);
-                        ex.rssi = result.getRssi();
-                        ex.time = t;
+                        ex.update(result.getRssi(), t);
                     }
                 }
             }

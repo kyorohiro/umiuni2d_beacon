@@ -7,13 +7,28 @@ import org.json.JSONObject;
 //
 //
 class TinyBeaconInfo {
+    double smartRssi;
     int rssi;
     long time;
     TinyAdPacket packet;
+    int proximity;
+
     TinyBeaconInfo(TinyAdPacket _packet, int _rssi, long _time) {
         this.rssi = _rssi;
         this.time = _time;
         this.packet = _packet;
+        this.smartRssi = _rssi;
+    }
+
+    void update(int _rssi, long _time) {
+        if(_time-time > 10) {
+            smartRssi = _rssi;
+        } else {
+            smartRssi = (3.0*smartRssi + 2.0*_rssi)/5.0;
+        }
+        rssi = _rssi;
+        time = _time;
+        proximity = TinyIBeaconPacket.getProximity(packet, smartRssi, proximity);
     }
 
     JSONObject toJsonString() throws JSONException {
@@ -24,7 +39,24 @@ class TinyBeaconInfo {
         ret.put("calrssi", TinyIBeaconPacket.getCalibratedRSSIAsIBeacon(packet));
         ret.put("rssi", rssi);
         ret.put("time", time);
+        ret.put("proximity",getProximityString());
         return ret;
+    }
+
+    String getProximityString() {
+        switch (proximity) {
+            case TinyIBeaconPacket.PROXIMITY_NONE:
+                return "none";
+            case TinyIBeaconPacket.PROXIMITY_IMMEDIATE:
+                return "immediate";
+            case TinyIBeaconPacket.PROXIMITY_NEAR:
+                return "near";
+            case TinyIBeaconPacket.PROXIMITY_FAR:
+                return "far";
+            case TinyIBeaconPacket.PROXIMITY_UNKNOWN:
+                return "unknown";
+        }
+        return "none";
     }
 
     @Override
