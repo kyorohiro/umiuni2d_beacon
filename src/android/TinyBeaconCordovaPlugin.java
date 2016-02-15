@@ -29,6 +29,7 @@ public class TinyBeaconCordovaPlugin extends CordovaPlugin {
             }
             callbackContext.success();
         } else if("startLescan".equals(action)) {
+            android.util.Log.v("KY", "##StartLescan# ");
             beacon.startLescan(this.cordova.getActivity().getApplicationContext());
             callbackContext.success();
         } else if("stopLescan".equals(action)) {

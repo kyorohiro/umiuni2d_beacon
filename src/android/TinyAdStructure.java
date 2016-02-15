@@ -89,6 +89,7 @@ public class TinyAdStructure {
 
 
     //
+    // TODO create iBeacon class & functionry method
     //
     boolean isiBeacon() {
         if(getAdType() != ADTYPE_MANUFACTURE_SPECIFIC) {
@@ -105,6 +106,22 @@ public class TinyAdStructure {
             return false;
         }
         return true;
+    }
+
+    //
+    // RSSI = Power - 20  log10(100cm);
+    // -(RSSI - Power)/20 =  log10(d);
+    // 10 ^(Power -RSSI)/20 = d : d is per 100cm
+    //
+    // DISTANCE = 10 ^ ((POWER-RSSI)/20)
+    // RSSI     = POWER - 20*log10(D) : about d --> {100cm --> 1 , 50cm -->0.5, 200cm --> 2}
+    //
+    // 50cm  a+6
+    // 100cm a
+    // 200cm a-6
+    // 400cm a-12
+    double distance(double rssi) {
+        return Math.pow(10.0, (getCalibratedRSSIAsiBeacon()-rssi)/20.0 );
     }
 
     int getIdentifierAsiBeacon_00() {

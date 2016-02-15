@@ -2,7 +2,7 @@ cordova.define("info.kyorohiro.cordova.tinybeacon.TinyBeacon", function(require,
                var TinyBeacon = function() {
                this.message = "xxx xxx";
 
-               this.startLescan = function(json) {
+               this.startLescan = function(success, fail, json) {
                var args = [];
                if(json != null) {
                 args = [json];
@@ -10,38 +10,38 @@ cordova.define("info.kyorohiro.cordova.tinybeacon.TinyBeacon", function(require,
                console.log("###xxx ### " +args);
 
                cordova.exec(
-                            function(a) {console.log("##xxx## " + a)},
-                            function() {},
+                            success,
+                            fail,
                             "TinyBeacon","startLescan",args);
                };
-               
-               this.stopLescan = function() {
+
+               this.stopLescan = function(success, fail) {
                cordova.exec(
-                            function(a) {console.log("##xxx## " + a)},
-                            function() {},
+                            success,
+                            fail,
                             "TinyBeacon","stopLescan",[]);
                };
-               
-               this.requestPermissions = function() {
+
+               this.requestPermissions = function(success, fail) {
                cordova.exec(
-                            function(a) {console.log("##xxx## " + a)},
-                            function() {},
+                            success,
+                            fail,
                             "TinyBeacon","requestPermissions",[]);
                }
-               
-               this.getFoundBeacon = function() {
+
+               this.getFoundBeacon = function(success, fail) {
                cordova.exec(
-                            function(a) {console.log("##xxx## " + a)},
-                            function() {},
+                            success,
+                            fail,
                             "TinyBeacon","getFoundBeacon",[]);
                }
-               this.clearFoundedBeacon = function() {
+               this.clearFoundedBeacon = function(success, fail) {
                cordova.exec(
-                            function(a) {console.log("##xxx## " + a)},
-                            function() {},
+                            success,
+                            fail,
                             "TinyBeacon","clearFoundBeacon",[]);
                }
                }
-               
+
                module.exports.TinyBeacon = TinyBeacon;
 });
