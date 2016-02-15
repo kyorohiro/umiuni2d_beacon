@@ -35,7 +35,6 @@ public class TinyBeaconCordovaPlugin extends CordovaPlugin {
                     } else {
                         try {
                             callbackContextForRequestPermission = callbackContext;
-//                cordova.getActivity().requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
                             cordova.requestPermissions(this, 0, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION});
                             android.util.Log.v("KY", "##C# ");
                         } catch(Exception e) {
@@ -46,16 +45,32 @@ public class TinyBeaconCordovaPlugin extends CordovaPlugin {
             }
         } else if("startLescan".equals(action)) {
             android.util.Log.v("KY", "##StartLescan# ");
-            beacon.startLescan(this.cordova.getActivity().getApplicationContext());
-            callbackContext.success();
+            try {
+                beacon.startLescan(this.cordova.getActivity().getApplicationContext());
+                callbackContext.success();
+            } catch(Exception e) {
+                callbackContext.error("failed");
+            }
         } else if("stopLescan".equals(action)) {
-            beacon.stopLescan();
-            callbackContext.success();
+            try {
+                beacon.stopLescan();
+                callbackContext.success();
+            } catch(Exception e) {
+                callbackContext.error("failed");
+            }
         } else if("getFoundBeacon".equals(action)) {
-            callbackContext.success(beacon.getFoundedBeeaconAsJSONText());
+            try {
+                callbackContext.success(beacon.getFoundedBeeaconAsJSONText());
+            } catch(Exception e) {
+                callbackContext.error("failed");
+            }
         } else if("clearFoundBeacon".equals(action)) {
-            beacon.clearFoundedBeeacon();
-            callbackContext.success();
+            try {
+                beacon.clearFoundedBeeacon();
+                callbackContext.success();
+            } catch(Exception e) {
+                callbackContext.error("failed");
+            }
         } else {
             PluginResult result = new PluginResult(PluginResult.Status.OK, "AAA");
             result.setKeepCallback(true);
