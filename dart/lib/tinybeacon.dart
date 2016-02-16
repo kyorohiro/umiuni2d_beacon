@@ -3,8 +3,9 @@ library tinybeacon;
 import 'dart:js' as js;
 import 'dart:async';
 
-class Cordova {
-  Future<String> exec(String action, List<String> args) {
+
+class TinyCordova {
+  Future<String> exec(String service, String action, List<String> args) {
     Completer completer = new Completer();
     js.JsObject root = js.context;
     if(root.hasProperty("cordova")) {
@@ -13,7 +14,31 @@ class Cordova {
     root.callMethod("exec",[
       (a){completer.complete(a);},
       (b){completer.completeError(b);},
-      args]);
+      service, action, args]);
     return completer.future;
+  }
+}
+
+class TinyBeacon {
+  TinyCordova cordova = new TinyCordova();
+
+  startLescan() async {
+    return await cordova.exec("TinyBeacon","startLescan",[]);
+  }
+
+  stopLescan() async {
+    return await cordova.exec("TinyBeacon","stopLescan",[]);
+  }
+
+  requestPermissions() async {
+    return await cordova.exec("TinyBeacon","requestPermissions",[]);
+  }
+
+  Future<String> getFoundBeacon() async {
+    return await cordova.exec("TinyBeacon","getFoundBeacon",[]);
+  }
+
+  clearFoundedBeacon() async {
+    return await cordova.exec("TinyBeacon","clearFoundedBeacon",[]);
   }
 }
