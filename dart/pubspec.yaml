@@ -1,0 +1,25 @@
+name: tinybeacon
+description: Add your description for .
+author: kyorohiro <kyorohiro@gmail.com>
+homepage: https://github.com/kyorohiro/dart-.
+
+version: 1.0.0
+
+environment:
+  sdk: '>=1.0.0 <2.0.0'
+
+dependencies:
+  browser: any
+
+  logging: any
+  logging_handlers: any
+  console_log_handler: any
+
+  validate: any
+
+  args: any
+  yaml: any
+
+dev_dependencies:
+  test: any
+  grinder: any
