@@ -1,5 +1,6 @@
-# umiuni2d beacon
+# umiuni2d_beacon
 
+scan ibeacon
 now support on cordova
 
 # install cordova plugin
