@@ -9,16 +9,28 @@ void main() {
   {
     html.InputElement startLescanButton = new html.InputElement(type: "button");
     startLescanButton.value = "startlescan";
-    startLescanButton.onClick.listen((html.MouseEvent e) {
+    startLescanButton.onClick.listen((html.MouseEvent e) async {
       print("click startlescan");
+      try {
+        await beacon.startLescan();
+      } catch(e) {
+        print("##----C003-----${e}");
+        print("failed to startLescan");
+      }
     });
     html.document.body.children.add(startLescanButton);
   }
   {
     html.InputElement stopLescanButton = new html.InputElement(type: "button");
     stopLescanButton.value = "stoplescan";
-    stopLescanButton.onClick.listen((html.MouseEvent e) {
+    stopLescanButton.onClick.listen((html.MouseEvent e) async {
       print("click stoplescan");
+      try {
+        await beacon.stopLescan();
+      } catch(e) {
+        print("##----C003-----${e}");
+        print("failed to stopLescan");
+      }
     });
     html.document.body.children.add(stopLescanButton);
   }
@@ -29,14 +41,38 @@ void main() {
     stopLescanButton.onClick.listen((html.MouseEvent e) async {
       print("click requestPermissions");
       try {
-        print("##----C001-----");
         await beacon.requestPermissions();
-        print("##----C002-----");
       } catch(e) {
         print("##----C003-----${e}");
-        print("failed to requestPermissions");
       }
     });
     html.document.body.children.add(stopLescanButton);
+  }
+
+  {
+    html.InputElement getFoundBeaconButton = new html.InputElement(type: "button");
+    getFoundBeaconButton.value = "requestPermissions";
+    getFoundBeaconButton.onClick.listen((html.MouseEvent e) async {
+      print("click getFoundBeacon");
+      try {
+        print("${await beacon.getFoundBeacon()}");
+      } catch(e) {
+        print("##----C003-----${e}");
+      }
+    });
+    html.document.body.children.add(getFoundBeaconButton);
+  }
+  {
+    html.InputElement clearFoundBeaconButton = new html.InputElement(type: "button");
+    clearFoundBeaconButton.value = "requestPermissions";
+    clearFoundBeaconButton.onClick.listen((html.MouseEvent e) async {
+      print("click clearFoundBeacon");
+      try {
+        beacon.clearFoundedBeacon();
+      } catch(e) {
+        print("##----C003-----${e}");
+      }
+    });
+    html.document.body.children.add(clearFoundBeaconButton);
   }
 }
