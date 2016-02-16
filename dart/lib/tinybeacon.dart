@@ -5,7 +5,7 @@ import 'dart:async';
 import 'dart:html' as html;
 
 class TinyCordova {
-  Future<String> exec(String service, String action, List<String> args) {
+  Future<String> exec(String service, String action, List args) {
     Completer completer = new Completer();
     try {
       print("##----B001-----");
@@ -15,9 +15,10 @@ class TinyCordova {
       if (false == root.hasProperty("cordova")) {
         throw "not found cordova";
       }
-      ;
+      js.JsObject cordova= root["cordova"];
       print("##----B002-----");
-      root["cordova"].callMethod("exec", [
+
+      cordova.callMethod("exec", [
         (a) {
           print("##----B002a-----");
           completer.complete(a);
@@ -29,7 +30,7 @@ class TinyCordova {
         },
         service,
         action,
-        args
+        new js.JsObject.jsify(args)
       ]);
     } catch (e) {
       print("##----B003-----");
@@ -52,16 +53,15 @@ class TinyBeacon {
 
   requestPermissions() async {
     print("##----A001-----");
+/*
     js.JsObject a = new js.JsObject(js.context["cordova"]["plugins"]["TinyBeacon"]);
     Completer c = new Completer();
     a.callMethod("requestPermissions",[
       (){c.complete("");},
       (){c.completeError("");}]);
     return await c.future;
-    //                       "TinyBeacon",  "requestPermissions"
-    /*
+*/
     return await cordova.exec( "TinyBeacon", "requestPermissions", []);
-    */
   }
 
   Future<String> getFoundBeacon() async {
