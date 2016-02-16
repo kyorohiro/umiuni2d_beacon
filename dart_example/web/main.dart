@@ -26,11 +26,14 @@ void main() {
   {
     html.InputElement stopLescanButton = new html.InputElement(type: "button");
     stopLescanButton.value = "requestPermissions";
-    stopLescanButton.onClick.listen((html.MouseEvent e) {
+    stopLescanButton.onClick.listen((html.MouseEvent e) async {
       print("click requestPermissions");
       try {
-        beacon.requestPermissions();
+        print("##----C001-----");
+        await beacon.requestPermissions();
+        print("##----C002-----");
       } catch(e) {
+        print("##----C003-----${e}");
         print("failed to requestPermissions");
       }
     });
