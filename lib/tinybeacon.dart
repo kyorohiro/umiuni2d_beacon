@@ -1,4 +1,4 @@
-library tinybeacon;
+library umiuni2d_beacon;
 
 import 'dart:js' as js;
 import 'dart:async';
