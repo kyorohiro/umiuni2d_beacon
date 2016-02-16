@@ -4,7 +4,7 @@ scan ibeacon
 now support on cordova
 
 # install cordova plugin
-cordova plugin add https://github.com/kyorohiro/cordova-plugin-tinybeacon.git
+cordova plugin add https://github.com/kyorohiro/umiuni2d_beacon.git
 
 
 # use from dart
