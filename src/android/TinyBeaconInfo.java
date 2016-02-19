@@ -32,6 +32,10 @@ class TinyBeaconInfo {
         proximity = TinyIBeaconPacket.getProximity(packet, smartRssi, proximity);
     }
 
+    public static long getTime() {
+        return System.currentTimeMillis()/1000;
+    }
+
     JSONObject toJsonString() throws JSONException {
         JSONObject ret = new JSONObject();
         ret.put("uuid", TinyIBeaconPacket.getUUIDHexStringAsIBeacon(packet));

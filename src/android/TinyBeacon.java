@@ -66,6 +66,7 @@ public class TinyBeacon {
             t.add(e.toJsonString());
         }
         ret.put("founded", new JSONArray(t));
+        ret.put("time", TinyBeaconInfo.getTime());
         return ret.toString();
     }
 
@@ -90,7 +91,7 @@ public class TinyBeacon {
             //android.util.Log.v("beacon", "###SA## manu:" + result.getDevice().getType());
             //android.util.Log.v("beacon", "###SA## manu:" +result.getScanRecord().getManufacturerSpecificData());
             //android.util.Log.v("beacon", "###SA## scanResult type:" + callbackType + " ,result: " + result.toString());
-            long t = System.currentTimeMillis();
+            long t = TinyBeaconInfo.getTime();//System.currentTimeMillis();
             List<TinyAdPacket> ad = TinyAdPacket.parse(result.getScanRecord().getBytes());
             for(TinyAdPacket a : ad){
                 if(TinyIBeaconPacket.isIBeacon(a)) {
