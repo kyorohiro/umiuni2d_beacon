@@ -1,8 +1,6 @@
 library umiuni2d_beacon_mock;
 
 import 'dart:async';
-import 'dart:convert';
-import 'tinycordova.dart';
 import 'tinybeacon.dart';
 
 class TinyBeaconMock extends TinyBeacon {
@@ -17,7 +15,7 @@ class TinyBeaconMock extends TinyBeacon {
   requestPermissions({TinyBeaconRequestFlag flag: TinyBeaconRequestFlag.WHEN_IN_USE}) async {
   }
 
-  Future<TinyBeaconFoundInfo> getFoundBeacon() async {
+  Future<TinyBeaconFoundResult> getFoundBeacon() async {
   }
 
   clearFoundedBeacon() async {

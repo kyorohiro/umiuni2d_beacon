@@ -47,7 +47,7 @@ class TinyBeaconCordova extends TinyBeacon {
     return await cordova.exec("TinyBeacon", "requestPermissions", [flagForCordova]);
   }
 
-  Future<TinyBeaconFoundInfo> getFoundBeacon() async {
+  Future<TinyBeaconFoundResult> getFoundBeacon() async {
     String source = await cordova.exec("TinyBeacon", "getFoundBeacon", []);
     return new TinyBeaconFoundInfoCordova(source);
   }
@@ -57,12 +57,12 @@ class TinyBeaconCordova extends TinyBeacon {
   }
 }
 
-class TinyBeaconFoundInfoCordova extends TinyBeaconFoundInfo {
+class TinyBeaconFoundInfoCordova extends TinyBeaconFoundResult {
   String source;
   bool isDecode = false;
 
   int _mTimePerSec = 0;
-  List<TinyBeaconBeacon> _mBeacons = [];
+  List<TinyBeaconFoundBeacon> _mBeacons = [];
 
   TinyBeaconFoundInfoCordova(this.source) {}
 
@@ -71,7 +71,7 @@ class TinyBeaconFoundInfoCordova extends TinyBeaconFoundInfo {
     return _mTimePerSec;
   }
 
-  List<TinyBeaconBeacon> get beacons {
+  List<TinyBeaconFoundBeacon> get beacons {
     _decode();
     return _mBeacons;
   }
@@ -86,7 +86,7 @@ class TinyBeaconFoundInfoCordova extends TinyBeaconFoundInfo {
       _mTimePerSec = root["time"];
       List<Map> beacons = root["founded"];
       for (Map b in beacons) {
-        _mBeacons.add(new TinyBeaconBeacon()
+        _mBeacons.add(new TinyBeaconFoundBeacon()
           ..uuid = b["uuid"]
           ..major = b["major"]
           ..minor = b["minor"]

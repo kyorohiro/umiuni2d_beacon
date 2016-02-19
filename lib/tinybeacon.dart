@@ -1,7 +1,6 @@
 library umiuni2d_beacon;
 
 import 'dart:async';
-import 'dart:convert';
 
 enum TinyBeaconRequestFlag {
   WHEN_IN_USE, //= "foreground_only";
@@ -10,7 +9,7 @@ enum TinyBeaconRequestFlag {
 
 enum TinyBeaconScanFlag { LOW, NORMAL, HIGH }
 
-class TinyBeaconBeacon {
+class TinyBeaconFoundBeacon {
   String uuid;
   int major;
   int minor;
@@ -25,15 +24,15 @@ class TinyBeaconBeacon {
   }
 }
 
-abstract class TinyBeaconFoundInfo {
+abstract class TinyBeaconFoundResult {
   int get timePerSec;
-  List<TinyBeaconBeacon> get beacons;
+  List<TinyBeaconFoundBeacon> get beacons;
 
   @override
   String toString() {
     StringBuffer buffer = new StringBuffer();
     buffer.write("time: ${timePerSec}\n");
-    for(TinyBeaconBeacon b in beacons) {
+    for(TinyBeaconFoundBeacon b in beacons) {
       buffer.write("::beacon: ${b}\n");
     }
     return buffer.toString();
@@ -71,6 +70,6 @@ abstract class TinyBeacon {
   startLescan(List<TinyBeaconScanInfo> beacons, {flag: TinyBeaconScanFlag.NORMAL});
   stopLescan();
   requestPermissions({TinyBeaconRequestFlag flag: TinyBeaconRequestFlag.WHEN_IN_USE});
-  Future<TinyBeaconFoundInfo> getFoundBeacon();
+  Future<TinyBeaconFoundResult> getFoundBeacon();
   clearFoundedBeacon();
 }
