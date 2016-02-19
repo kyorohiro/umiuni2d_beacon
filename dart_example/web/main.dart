@@ -68,7 +68,9 @@ void main() {
     getFoundBeaconButton.onClick.listen((html.MouseEvent e) async {
       print("click getFoundBeacon");
       try {
-        print("${await beacon.getFoundBeacon()}");
+        var v = await beacon.getFoundBeacon();
+        print("##----C001-----");
+        print("${v}");
       } catch (e) {
         print("##----C003-----${e}");
       }

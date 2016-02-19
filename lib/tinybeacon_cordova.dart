@@ -47,11 +47,55 @@ class TinyBeaconCordova extends TinyBeacon {
     return await cordova.exec("TinyBeacon", "requestPermissions", [flagForCordova]);
   }
 
-  Future<String> getFoundBeacon() async {
-    return await cordova.exec("TinyBeacon", "getFoundBeacon", []);
+  Future<TinyBeaconFoundInfo> getFoundBeacon() async {
+    String source = await cordova.exec("TinyBeacon", "getFoundBeacon", []);
+    return new TinyBeaconFoundInfoCordova(source);
   }
 
   clearFoundedBeacon() async {
     return await cordova.exec("TinyBeacon", "clearFoundedBeacon", []);
+  }
+}
+
+class TinyBeaconFoundInfoCordova extends TinyBeaconFoundInfo {
+  String source;
+  bool isDecode = false;
+
+  int _mTimePerSec = 0;
+  List<TinyBeaconBeacon> _mBeacons = [];
+
+  TinyBeaconFoundInfoCordova(this.source) {}
+
+  int get timePerSec {
+    _decode();
+    return _mTimePerSec;
+  }
+
+  List<TinyBeaconBeacon> get beacons {
+    _decode();
+    return _mBeacons;
+  }
+
+  _decode() {
+    if (isDecode == true) {
+      return;
+    } else {
+      //print("########## ${source}");
+      //
+      Map root = JSON.decode(source);
+      _mTimePerSec = root["time"];
+      List<Map> beacons = root["founded"];
+      for (Map b in beacons) {
+        _mBeacons.add(new TinyBeaconBeacon()
+          ..uuid = b["uuid"]
+          ..major = b["major"]
+          ..minor = b["minor"]
+          ..proximity = b["proximity"]
+          ..accuracy = b["accuracy"]
+          ..timeSec = b["time"]
+          ..rssi = b["rssi"]);
+      }
+      isDecode = true;
+    }
   }
 }

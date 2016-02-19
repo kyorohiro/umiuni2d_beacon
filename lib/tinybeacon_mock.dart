@@ -17,7 +17,7 @@ class TinyBeaconMock extends TinyBeacon {
   requestPermissions({TinyBeaconRequestFlag flag: TinyBeaconRequestFlag.WHEN_IN_USE}) async {
   }
 
-  Future<String> getFoundBeacon() async {
+  Future<TinyBeaconFoundInfo> getFoundBeacon() async {
   }
 
   clearFoundedBeacon() async {
