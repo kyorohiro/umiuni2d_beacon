@@ -27,6 +27,7 @@
     mFound = NO;
     mIsRanging = NO;
     mIsMonitoring = NO;
+    mAccuracy = 0.0;
 
     //
     if(major == [TinyBeaconInfo NUMBER_NULL] && minor == [TinyBeaconInfo NUMBER_NULL]) {
@@ -40,6 +41,15 @@
     nullRangingCount = 0;
     return self;
 }
+
+- (double) getAccuracy {
+    return mAccuracy;
+}
+
+- (void) setAccuracy:(double)v {
+    mAccuracy = v;
+}
+
 - (int) getNullRangingCount {
     return nullRangingCount;
 }

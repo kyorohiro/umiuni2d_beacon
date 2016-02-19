@@ -72,6 +72,7 @@
         NSObject *proximity = [info getProximityString];
         NSObject *rssi = [NSNumber numberWithInteger:[info getRssi]];
         NSObject *time = [NSNumber numberWithLong:[info getTime]];
+        NSObject *accuracy = [NSNumber numberWithDouble:[info getAccuracy]];
 
         if([info getMajor] != [TinyBeaconInfo NUMBER_NULL]) {
             major =[NSNumber numberWithInt:[info getMajor]];
@@ -82,7 +83,8 @@
         NSDictionary *b = @{
           @"uuid":uuid,
           @"major":major, @"minor":minor,
-          @"proximity":proximity, @"rssi" : rssi, @"time":time};
+          @"proximity":proximity, @"rssi" : rssi, @"time":time,
+          @"accuracy":accuracy};
         [beacons addObject:b];
     }
     root [@"beacons"] = beacons;

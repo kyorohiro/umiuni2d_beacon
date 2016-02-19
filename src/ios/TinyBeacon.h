@@ -26,7 +26,7 @@
     bool mIsMonitoring;
     long mTime;
     int mRssi;
-
+    double mAccuracy;
 }
 @property (nonatomic, strong) CLBeaconRegion *region;
 
@@ -57,6 +57,8 @@
 - (bool) getIsMonitoring;
 - (long) getTime;
 - (int) getRssi;
+- (double) getAccuracy;
+- (void) setAccuracy:(double)v;
 @end
 
 @interface TinyBeacinInfoList : NSObject

@@ -73,7 +73,6 @@
 
 - (void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLBeaconRegion *)region
 {
-    NSLog(@"### didRangeBeacons");
     if([beacons count] == 0) {
         TinyBeaconInfo *info = [self.beaconInfos getTinyBeaconInfoFromBeaconRegion:region];
         if(info != nil) {
@@ -95,6 +94,7 @@
         [info setProximity:(int)[b proximity]];
         [info setTime:timestamp];
         [info clearNullRangingCount];
+        [info setAccuracy:[b accuracy]];
     }
 
 }
