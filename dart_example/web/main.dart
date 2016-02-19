@@ -5,7 +5,7 @@ import 'dart:html' as html;
 import 'package:umiuni2d_beacon/tinybeacon.dart';
 
 void main() {
-  TinyBeacon beacon = new TinyBeacon();
+  TinyBeacon beacon = new TinyBeaconCordova();
   {
     html.InputElement startLescanButton = new html.InputElement(type: "button");
     startLescanButton.value = "startlescan";

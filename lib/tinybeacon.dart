@@ -73,7 +73,18 @@ class TinyBeaconScanInfo {
   }
 }
 
-class TinyBeacon {
+abstract class TinyBeacon {
+  //
+  // android only : empty beacons is scan all beacon.
+  startLescan(List<TinyBeaconScanInfo> beacons, {flag: TinyBeaconScanFlag.NORMAL});
+  stopLescan();
+  requestPermissions({TinyBeaconRequestFlag flag: TinyBeaconRequestFlag.WHEN_IN_USE});
+  Future<String> getFoundBeacon();
+  clearFoundedBeacon();
+}
+
+
+class TinyBeaconCordova extends TinyBeacon {
   TinyCordova cordova = new TinyCordova();
 
   //
