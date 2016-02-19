@@ -35,7 +35,7 @@
 {
     
     NSLog(@"###### startLescan");
-    if([[command arguments] count] == 0) {
+    if([[command arguments] count] < 1) {
         CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
         [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
         return;
@@ -73,11 +73,19 @@
 - (void)requestPermissions:(CDVInvokedUrlCommand*) command
 {
     NSLog(@"###### requestPermissions");
-    
+    if([command.arguments count] < 1) {
+        CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+        [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
+        NSLog(@"###### requestPermissions error 1");
+        return;
+    }
+
     @try {
-        [self.beacon requestPermissions:self callbackId:command.callbackId];
+        NSLog(@"###### requestPermissions %@", command.arguments[0]);
+        [self.beacon requestPermissions:command.arguments[0] callback:self callbackId:command.callbackId];
     }
     @catch (NSException *exception) {
+        NSLog(@"###### requestPermissions error 2");
         CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
         [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
     }

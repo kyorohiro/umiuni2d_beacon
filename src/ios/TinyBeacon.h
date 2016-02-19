@@ -78,14 +78,16 @@
 @end
 
 @interface TinyBeacon : NSObject <CLLocationManagerDelegate>
-@property (weak, nonatomic) NSString* delegateId;
+{
+    NSString* mDelegateId;
+}
 @property (weak, nonatomic) id <TinyBeaconDelegate> delegate;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) TinyBeacinInfoList *beaconInfos;
 - (id)init;
 - (void)startLescan:(NSString*)arg;
 - (void)stopLescan;
-- (void)requestPermissions:(id <TinyBeaconDelegate>) callback callbackId:(NSString*)callbackId;
+- (void)requestPermissions:(NSString*)flag callback:(id <TinyBeaconDelegate>) callback callbackId:(NSString*)callbackId;
 - (NSString*)getFoundBeacon;
 - (void)clearFoundBeacon;
 @end

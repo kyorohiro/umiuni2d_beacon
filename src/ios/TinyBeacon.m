@@ -26,10 +26,11 @@
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status{
     NSLog(@"### didChangeAuthorizationStatus");
     if(self.delegate != nil) {
+        NSLog(@"###### requestPermissionsA, %@", mDelegateId);
         if(status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusNotDetermined) {
-            [self.delegate onFailedReqiestPermissions:self.delegateId message:@"NG"];
+            [self.delegate onFailedReqiestPermissions:mDelegateId message:@"NG"];
         } else {
-            [self.delegate onOKRequestPermissions:self.delegateId];
+            [self.delegate onOKRequestPermissions:mDelegateId];
         }
     }
     self.delegate = nil;
@@ -101,18 +102,20 @@
 
 - (void)startLescan:(NSString*)arg
 {
-    NSLog(@"###### startLescan");
+    NSLog(@"###### startLescan %@", arg);
     if(arg == nil) {
         @throw @"NSString type";
     }
-    
     NSData *data = [arg dataUsingEncoding:NSUTF8StringEncoding];
     NSDictionary* v = [NSJSONSerialization JSONObjectWithData:data
                                                       options:NSJSONReadingAllowFragments error:nil];
     NSLog(@"#C# %@", [v objectForKey:@"beacons"]);
     NSArray* beacons = [v objectForKey:@"beacons"];
-    
+    if([beacons count] <= 0) {
+        @throw @"NSString type";
+    }
     for(NSDictionary* d in beacons) {
+        NSLog(@"----------SSSS=----%@",[d objectForKey:@"uuid"]);
         //
         NSString *uuid = (NSString*)[d objectForKey:@"uuid"];
         TinyBeaconInfo *info = [self.beaconInfos putTinyBeaconInfo:uuid major:[TinyBeaconInfo NUMBER_NULL] minor:[TinyBeaconInfo NUMBER_NULL]];
@@ -121,7 +124,7 @@
         [info setIsRanging:YES];
         [self.locationManager startRangingBeaconsInRegion:info.region];
         //
-        NSLog(@"----------SSSS=----%@",[d objectForKey:@"uuid"]);
+
     }
     
 }
@@ -144,17 +147,21 @@
 
 //
 // TODO need two pattern
-- (void)requestPermissions:(id <TinyBeaconDelegate>) callback callbackId:(NSString*)callbackId;
+- (void)requestPermissions:(NSString*)flag callback:(id <TinyBeaconDelegate>) callback callbackId:(NSString*)callbackId;
 {
-    NSLog(@"###### requestPermissions");
+    NSLog(@"###### requestPermissions, %@", callbackId);
     if (self.delegate != nil) {
         @throw @"NSString type";
     }
+    mDelegateId = [NSString stringWithFormat:@"%@", callbackId];
     self.delegate = callback;
-    self.delegateId = callbackId;
+//        NSLog(@"###### requestPermissions, %@", mDelegateId);
     if (floor(NSFoundationVersionNumber) >= NSFoundationVersionNumber_iOS_8_0) {
-        //             self.locationManager.requestWhenInUseAuthorization
-        [self.locationManager requestAlwaysAuthorization];
+        if([flag isEqual:@"when_in_use"]) {
+            [self.locationManager requestWhenInUseAuthorization];
+        } else {
+            [self.locationManager requestAlwaysAuthorization];
+        }
     }
 }
 
