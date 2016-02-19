@@ -3,6 +3,7 @@
 
 import 'dart:html' as html;
 import 'package:umiuni2d_beacon/tinybeacon.dart';
+import 'package:umiuni2d_beacon/tinybeacon_cordova.dart';
 
 void main() {
   TinyBeacon beacon = new TinyBeaconCordova();
