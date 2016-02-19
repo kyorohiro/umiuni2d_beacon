@@ -2,7 +2,7 @@
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
 import 'dart:html' as html;
-import 'package:tinybeacon/tinybeacon.dart';
+import 'package:umiuni2d_beacon/tinybeacon.dart';
 
 void main() {
   TinyBeacon beacon = new TinyBeacon();
