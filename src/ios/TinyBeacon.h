@@ -15,7 +15,10 @@
 
 @interface TinyBeaconInfo : NSObject
 {
+    NSString* mUuid;
     int nullRangingCount;
+    int mMajor;
+    int mMinor;
 }
 @property (nonatomic, strong) CLBeaconRegion *region;
 @property (nonatomic, strong) NSNumber *time;
@@ -25,24 +28,27 @@
 @property (nonatomic, strong) NSNumber *isRanging;
 @property (nonatomic, strong) NSNumber *inRegion;
 @property (nonatomic, strong) NSNumber *proximity;
-
-- (id)initWithUUID:(NSString*)uuid major:(NSNumber*)major minor:(NSNumber*)minor;
++ (int)NUMBER_NULL;
+- (id)initWithUUID:(NSString*)uuid major:(int)major minor:(int)minor;
 - (id)initWithBeaconRegion:(CLBeaconRegion*) regision;
 - (id)free;
 - (BOOL) isEqual:(id)other;
+
 - (int) getNullRangingCount;
 - (void) addNullRangingCount;
 - (void) clearNullRangingCount;
-
+- (NSString*) getUUID;
+- (int) getMajor;
+- (int) getMinor;
 @end
 
 @interface TinyBeacinInfoList : NSObject
 @property (nonatomic, strong) NSMutableArray *beaconInfos;
 - (id) init;
 - (TinyBeaconInfo*) putTinyBeaconInfoFromBeaconRegion: (CLBeaconRegion*) region;
-- (TinyBeaconInfo*) putTinyBeaconInfo:(NSString*) uuid major:(NSNumber*)major minor:(NSNumber*)minor;
+- (TinyBeaconInfo*) putTinyBeaconInfo:(NSString*) uuid major:(int)major minor:(int)minor;
 - (TinyBeaconInfo*) getTinyBeaconInfoFromBeaconRegion: (CLBeaconRegion*) region;
-- (TinyBeaconInfo*) getTinyBeaconInfoFromBeaconFromUUID: (NSString*) uuid major:(NSNumber*)major minor:(NSNumber*)minor;
+- (TinyBeaconInfo*) getTinyBeaconInfoFromBeaconFromUUID: (NSString*) uuid major:(int)major minor:(int)minor;
 - (NSString*) getFoundBeaconInfo;
 - (void) clearFoundBeaconInfo;
 @end

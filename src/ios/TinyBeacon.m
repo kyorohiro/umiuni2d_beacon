@@ -90,11 +90,12 @@
     for(CLBeacon *b in beacons) {
         NSLog(@"### uuid : %@",[b proximityUUID]);
         NSLog(@"### rssi : %d",(int)[b rssi]);
-        NSLog(@"### major : %d",(int)[b major]);
-        NSLog(@"### minor : %d",(int)[b minor]);
+        NSLog(@"##A# major : %d",[[b major]intValue]);
+        NSLog(@"##A# minor : %d",[[b minor]intValue ]);
         NSLog(@"### accuracy : %d",(int)[b accuracy]);
         NSLog(@"### proximity : %d",(int)[b proximity]);
-        TinyBeaconInfo *info = [self.beaconInfos putTinyBeaconInfo:[[b proximityUUID] UUIDString] major:[b major] minor:[b minor]];
+        TinyBeaconInfo *info =
+        [self.beaconInfos putTinyBeaconInfo:[[b proximityUUID] UUIDString] major:[[b major] intValue] minor:[[b minor] intValue]];
         info.found = @YES;
         info.rssi = [NSNumber numberWithInt:(int)[b rssi]];
         info.proximity = [NSNumber numberWithInt:(int)[b proximity]];
@@ -120,7 +121,7 @@
     for(NSDictionary* d in beacons) {
         //
         NSString *uuid = (NSString*)[d objectForKey:@"uuid"];
-        TinyBeaconInfo *info = [self.beaconInfos putTinyBeaconInfo:uuid major:nil minor:nil];
+        TinyBeaconInfo *info = [self.beaconInfos putTinyBeaconInfo:uuid major:[TinyBeaconInfo NUMBER_NULL] minor:[TinyBeaconInfo NUMBER_NULL]];
         info.isMonitoring = @YES;
         [self.locationManager startMonitoringForRegion:info.region];
         info.isRanging = @YES;

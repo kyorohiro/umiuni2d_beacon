@@ -16,6 +16,7 @@
 }
 
 - (TinyBeaconInfo*) getTinyBeaconInfoFromBeaconRegion: (CLBeaconRegion*) region {
+    NSLog(@"#A#B#C# %d", region.major.intValue);
     for(TinyBeaconInfo *i in self.beaconInfos) {
         if([i.region isEqual:region] == YES) {
             return i;
@@ -24,15 +25,15 @@
     return nil;
 }
 
-- (TinyBeaconInfo*) getTinyBeaconInfoFromBeaconFromUUID: (NSString*) uuid major:(NSNumber*)major minor:(NSNumber*)minor {
+- (TinyBeaconInfo*) getTinyBeaconInfoFromBeaconFromUUID: (NSString*) uuid major:(int)major minor:(int)minor {
     for(TinyBeaconInfo *i in self.beaconInfos) {
-        if([[i.region.proximityUUID UUIDString] isEqual:uuid] == NO) {
+        if([[i getUUID] isEqual:uuid] == NO) {
             continue;
         }
-        if([[i.region major] intValue] != [major intValue]) {
+        if([i getMajor] != major) {
             continue;
         }
-        if([[i.region minor] intValue] != [minor intValue]) {
+        if([i getMinor] != minor) {
             continue;
         }
         return i;
@@ -40,7 +41,7 @@
     return nil;
 }
 
-- (TinyBeaconInfo*) putTinyBeaconInfo:(NSString*) uuid major:(NSNumber*)major minor:(NSNumber*)minor {
+- (TinyBeaconInfo*) putTinyBeaconInfo:(NSString*) uuid major:(int)major minor:(int)minor {
     TinyBeaconInfo *info =[self getTinyBeaconInfoFromBeaconFromUUID:uuid major:major minor:minor];
     if(info == nil) {
         info =[[TinyBeaconInfo alloc] initWithUUID:uuid major:major minor:minor];
@@ -66,16 +67,16 @@
             continue;
         }
         NSString *uuid = [[[info region] proximityUUID] UUIDString];
-        NSObject *major = [[info region] major];
-        NSObject *minor = [[info region] minor];
+        NSObject *major = [NSNull null];
+        NSObject *minor = [NSNull null];
         NSObject *proximity = [info proximity];
         NSObject *rssi = [info rssi];
         NSObject *time = [info time];
-        if(major == nil) {
-            major =[NSNull null];
+        if([info getMajor] != [TinyBeaconInfo NUMBER_NULL]) {
+            major =[NSNumber numberWithInt:[info getMajor]];
         }
-        if(minor == nil) {
-            minor =[NSNull null];
+        if([info getMinor] != [TinyBeaconInfo NUMBER_NULL]) {
+            minor =[NSNumber numberWithInt:[info getMinor]];
         }
         if(proximity == nil) {
             proximity =[NSNull null];

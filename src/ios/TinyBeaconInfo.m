@@ -11,15 +11,26 @@
 
 @implementation TinyBeaconInfo
 
-- (id)initWithUUID:(NSString*)uuid major:(NSNumber*)major minor:(NSNumber*)minor {
++ (int)NUMBER_NULL
+{
+    return -99999;
+}
+
+- (id)initWithUUID:(NSString*)uuid major:(int)major minor:(int)minor {
     NSUUID * uuidObj = [[NSUUID alloc] initWithUUIDString:uuid];
-    if(major == nil && minor == nil) {
+    mMajor = major;
+    mMinor = minor;
+    mUuid = uuid;
+
+    //
+    if(major == [TinyBeaconInfo NUMBER_NULL] && minor == [TinyBeaconInfo NUMBER_NULL]) {
       self.region = [[CLBeaconRegion alloc] initWithProximityUUID:uuidObj identifier:@"xxx"];
-    } else if(major != nil && minor == nil) {
-        self.region = [[CLBeaconRegion alloc] initWithProximityUUID:uuidObj major:[major intValue] identifier:@"xxx"];
+    } else if(major != TinyBeaconInfo.NUMBER_NULL && minor == TinyBeaconInfo.NUMBER_NULL) {
+        self.region = [[CLBeaconRegion alloc] initWithProximityUUID:uuidObj major:major identifier:@"xxx"];
     } else {
-        self.region = [[CLBeaconRegion alloc] initWithProximityUUID:uuidObj major:[major intValue] minor:[minor intValue] identifier:@"xxx"];
+        self.region = [[CLBeaconRegion alloc] initWithProximityUUID:uuidObj major:major minor:minor identifier:@"xxx"];
     }
+    //
     self.rssi = @0;
     self.time = @0L;
     self.found = @NO;
@@ -55,28 +66,39 @@
     return [self free];
 }
 
+- (NSString*) getUUID {
+    return mUuid;
+}
+
+- (int) getMajor {
+    return mMinor;
+}
+
+- (int) getMinor {
+    return mMinor;
+}
+
+
 - (BOOL) isEqual:(id)other {
     if(other == self) {
         return YES;
     } else if (NO == [other isKindOfClass:[self class]]) {
         return NO;
     }
+
     TinyBeaconInfo *otherObj = (TinyBeaconInfo*)other;
-    if(NO == [self.region.proximityUUID isEqual:otherObj.region.proximityUUID]) {
+    if(NO == [[self getUUID] isEqual:[otherObj getUUID]]) {
         return NO;
     }
-    if(self.region.major!= nil && [self.region.major isEqual:otherObj.region.major]) {
-        return NO;
-    } else if(self.region.major == nil && otherObj.region.major != nil){
-        return NO;
-    }
-    
-    if(self.region.minor!= nil && [self.region.minor isEqual:otherObj.region.minor]) {
-        return NO;
-    } else if(self.region.minor == nil && otherObj.region.minor != nil){
+
+    if([self getMajor ]!= [otherObj getMajor]) {
         return NO;
     }
-    
+
+    if([self getMinor ]!= [otherObj getMinor]) {
+        return NO;
+    }
+
     return YES;
 }
 @end
