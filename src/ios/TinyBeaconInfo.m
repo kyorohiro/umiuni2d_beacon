@@ -53,7 +53,17 @@
 }
 
 - (NSString*) getProximityString {
-    return @"";
+    switch (mProximity) {
+        case CLProximityImmediate:
+            return @"immediate";
+        case CLProximityNear:
+            return @"near";
+        case CLProximityFar:
+            return @"far";
+        case CLProximityUnknown:
+            return @"unknown";
+    }
+    return @"none";
 }
 
 - (id)initWithBeaconRegion:(CLBeaconRegion*) regision {

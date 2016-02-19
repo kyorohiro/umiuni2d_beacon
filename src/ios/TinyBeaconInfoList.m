@@ -69,7 +69,7 @@
         NSString *uuid = [[[info region] proximityUUID] UUIDString];
         NSObject *major = [NSNull null];
         NSObject *minor = [NSNull null];
-        NSObject *proximity = [NSNumber numberWithInteger:[info getProximity]];
+        NSObject *proximity = [info getProximityString];
         NSObject *rssi = [NSNumber numberWithInteger:[info getRssi]];
         NSObject *time = [NSNumber numberWithLong:[info getTime]];
 
