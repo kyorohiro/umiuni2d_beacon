@@ -12,7 +12,9 @@ void main() {
     startLescanButton.onClick.listen((html.MouseEvent e) async {
       print("click startlescan");
       try {
-        await beacon.startLescan();
+        await beacon.startLescan(
+          [new TinyBeaconScanInfo("f7826da64fa24e988024bc5b71e0893e"),
+          new TinyBeaconScanInfo("f7826da64fa24e988024bc5b71e0893f")]);
       } catch(e) {
         print("##----C003-----${e}");
         print("failed to startLescan");
@@ -37,7 +39,7 @@ void main() {
 
   {
     html.InputElement requestPermissionsButton = new html.InputElement(type: "button");
-    requestPermissionsButton.value = "requestPermissions";
+    requestPermissionsButton.value = "requestPermissions_for";
     requestPermissionsButton.onClick.listen((html.MouseEvent e) async {
       print("click requestPermissions");
       try {
@@ -48,7 +50,19 @@ void main() {
     });
     html.document.body.children.add(requestPermissionsButton);
   }
-
+  {
+    html.InputElement requestPermissionsButton = new html.InputElement(type: "button");
+    requestPermissionsButton.value = "requestPermissions_bac";
+    requestPermissionsButton.onClick.listen((html.MouseEvent e) async {
+      print("click requestPermissions");
+      try {
+        await beacon.requestPermissions(flag: TinyBeaconRequestFlag.ALWAYS);
+      } catch(e) {
+        print("##----C003-----${e}");
+      }
+    });
+    html.document.body.children.add(requestPermissionsButton);
+  }
   {
     html.InputElement getFoundBeaconButton = new html.InputElement(type: "button");
     getFoundBeaconButton.value = "getFoundBeaconButton";
