@@ -34,6 +34,10 @@ class TinyCordova {
   }
 }
 
+enum TinyBeaconRequestFlag {
+  FOREGROUND_ONLY,//= "foreground_only";
+  BACKGROUND,//_REQUEST = "background"
+}
 class TinyBeacon {
   TinyCordova cordova = new TinyCordova();
 
@@ -45,8 +49,14 @@ class TinyBeacon {
     return await cordova.exec("TinyBeacon", "stopLescan", []);
   }
 
-  requestPermissions() async {
-    return await cordova.exec("TinyBeacon", "requestPermissions", []);
+  requestPermissions({TinyBeaconRequestFlag flag:TinyBeaconRequestFlag.FOREGROUND_ONLY}) async {
+    String flag;
+    if(flag == TinyBeaconRequestFlag.FOREGROUND_ONLY) {
+      flag  = "foreground_only";
+    } else {
+      flag  = "background";
+    }
+    return await cordova.exec("TinyBeacon", "requestPermissions", [flag]);
   }
 
   Future<String> getFoundBeacon() async {
