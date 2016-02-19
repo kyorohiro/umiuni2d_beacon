@@ -12,28 +12,27 @@
 
 @implementation  TinyBeacon
 
-- (void)pluginInitialize
+- (id)init;
 {
     NSLog(@"###### init");
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
     self.beaconInfos = [[TinyBeacinInfoList alloc] init];
-    self.requestPermissionCallBackId = nil;
+    self.delegate = nil;
+    return self;
 }
 
 
 - (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status{
     NSLog(@"### didChangeAuthorizationStatus");
-    if(self.requestPermissionCallBackId != nil) {
+    if(self.delegate != nil) {
         if(status == kCLAuthorizationStatusDenied || status == kCLAuthorizationStatusNotDetermined) {
-            CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-            [self.commandDelegate sendPluginResult:r callbackId:self.requestPermissionCallBackId];
+            [self.delegate onFailedReqiestPermissions:self.delegateId message:@"NG"];
         } else {
-            CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-            [self.commandDelegate sendPluginResult:r callbackId:self.requestPermissionCallBackId];
+            [self.delegate onOKRequestPermissions:self.delegateId];
         }
     }
-    self.requestPermissionCallBackId = nil;
+    self.delegate = nil;
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
@@ -105,134 +104,75 @@
 
 }
 
-- (void)startLescan:(CDVInvokedUrlCommand*) command
+- (void)startLescan:(NSString*)arg
 {
     NSLog(@"###### startLescan");
-    if([[command arguments] count] == 0) {
-        CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-        [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
-        return;
+    if(arg == nil) {
+        @throw @"NSString type";
     }
-
-    //
-    //
-    @try
-    {
-        NSData *data = [command.arguments[0] dataUsingEncoding:NSUTF8StringEncoding];
-        NSDictionary* v = [NSJSONSerialization JSONObjectWithData:data
-                                                          options:NSJSONReadingAllowFragments error:nil];
-        NSLog(@"#C# %@", [v objectForKey:@"beacons"]);
-        NSArray* beacons = [v objectForKey:@"beacons"];
-        
-        for(NSDictionary* d in beacons) {
-            //
-            NSString *uuid = (NSString*)[d objectForKey:@"uuid"];
-            TinyBeaconInfo *info = [self.beaconInfos putTinyBeaconInfo:uuid major:nil minor:nil];
-            info.isMonitoring = @YES;
-            [self.locationManager startMonitoringForRegion:info.region];
-            info.isRanging = @YES;
-            [self.locationManager startRangingBeaconsInRegion:info.region];
-            //
-            NSLog(@"----------SSSS=----%@",[d objectForKey:@"uuid"]);
-        }
-        CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-        [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
-    }
-    @catch (NSException *exception) {
-        CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-        [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
+    
+    NSData *data = [arg dataUsingEncoding:NSUTF8StringEncoding];
+    NSDictionary* v = [NSJSONSerialization JSONObjectWithData:data
+                                                      options:NSJSONReadingAllowFragments error:nil];
+    NSLog(@"#C# %@", [v objectForKey:@"beacons"]);
+    NSArray* beacons = [v objectForKey:@"beacons"];
+    
+    for(NSDictionary* d in beacons) {
+        //
+        NSString *uuid = (NSString*)[d objectForKey:@"uuid"];
+        TinyBeaconInfo *info = [self.beaconInfos putTinyBeaconInfo:uuid major:nil minor:nil];
+        info.isMonitoring = @YES;
+        [self.locationManager startMonitoringForRegion:info.region];
+        info.isRanging = @YES;
+        [self.locationManager startRangingBeaconsInRegion:info.region];
+        //
+        NSLog(@"----------SSSS=----%@",[d objectForKey:@"uuid"]);
     }
     
 }
 
-- (void)stopLescan:(CDVInvokedUrlCommand*) command
+- (void)stopLescan
 {
     NSLog(@"###### stopLescan");
-    
-    @try {
-        for (TinyBeaconInfo *info in self.beaconInfos.beaconInfos) {
-            if(YES == info.isRanging.boolValue) {
-                [self.locationManager stopRangingBeaconsInRegion:info.region];
-                info.isRanging = @NO;
-            }
-            if(YES == info.isMonitoring.boolValue) {
-                [self.locationManager stopMonitoringForRegion:info.region];
-                info.isMonitoring = @NO;
-            }
+    for (TinyBeaconInfo *info in self.beaconInfos.beaconInfos) {
+        if(YES == info.isRanging.boolValue) {
+            [self.locationManager stopRangingBeaconsInRegion:info.region];
+            info.isRanging = @NO;
         }
-        CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-        [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
-    }
-    @catch (NSException *exception) {
-        CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-        [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
+        if(YES == info.isMonitoring.boolValue) {
+            [self.locationManager stopMonitoringForRegion:info.region];
+            info.isMonitoring = @NO;
+        }
     }
 }
+
 
 //
 // TODO need two pattern
-- (void)requestPermissions:(CDVInvokedUrlCommand*) command
+- (void)requestPermissions:(id <TinyBeaconDelegate>) callback callbackId:(NSString*)callbackId;
 {
     NSLog(@"###### requestPermissions");
-    if(self.requestPermissionCallBackId != nil) {
-        @try {
-            CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-            [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
-        }
-        @catch (NSException *exception) {
-        }
-        @finally {
-            self.requestPermissionCallBackId = nil;
-        }
+    if (self.delegate != nil) {
+        @throw @"NSString type";
     }
-    
-    
-    @try {
-        if (floor(NSFoundationVersionNumber) >= NSFoundationVersionNumber_iOS_8_0) {
-            //    self.locationManager.requestWhenInUseAuthorization
-            [self.locationManager requestAlwaysAuthorization];
-            self.requestPermissionCallBackId = command.callbackId;
-        } else {
-            CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-            [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
-        }
-    }
-    @catch (NSException *exception) {
-        CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-        [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
+    self.delegate = callback;
+    self.delegateId = callbackId;
+    if (floor(NSFoundationVersionNumber) >= NSFoundationVersionNumber_iOS_8_0) {
+        //             self.locationManager.requestWhenInUseAuthorization
+        [self.locationManager requestAlwaysAuthorization];
     }
 }
 
-- (void)getFoundBeacon:(CDVInvokedUrlCommand*) command
+- (NSString*)getFoundBeacon
 {
-    @try {
-        NSString* result =[self.beaconInfos getFoundBeaconInfo];
-        NSLog(@"###### getFoundBeacon %@",result);
-        CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:result];
-        [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
-    }
-    @catch (NSException *exception) {
-        CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-        [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
-    }
-    @finally {
-    }
+    NSLog(@"###### getFoundBeacon");
+    return [self.beaconInfos getFoundBeaconInfo];
 }
 
-- (void)clearFoundBeacon:(CDVInvokedUrlCommand*) command
+- (void)clearFoundBeacon
 {
-    NSLog(@"###### clearFoundedBeacon");
-    @try {
-        [self.beaconInfos clearFoundBeaconInfo];
-        CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-        [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
-    }
-    @catch (NSException *exception) {
-        CDVPluginResult *r = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-        [self.commandDelegate sendPluginResult:r callbackId:command.callbackId];
-    }
-    @finally {
-    }
+    NSLog(@"###### clearFoundBeacon");
+    [self.beaconInfos clearFoundBeaconInfo];
 }
 
 

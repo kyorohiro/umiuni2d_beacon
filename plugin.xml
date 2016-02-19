@@ -48,11 +48,12 @@
     <platform name="ios">
         <config-file parent="/*" target="config.xml">
             <feature name="TinyBeacon">
-                <param name="ios-package" value="TinyBeacon"/>
+                <param name="ios-package" value="TinyBeaconPlugin"/>
             </feature>
         </config-file>
         <header-file src="src/ios/TinyBeacon.h"/>
         <source-file src="src/ios/TinyBeacon.m"/>
+        <source-file src="src/ios/TinyBeaconPlugin.m"/>
         <source-file src="src/ios/TinyBeaconInfo.m"/>
         <source-file src="src/ios/TinyBeaconInfoList.m"/>
         <framework src="CoreBluetooth.framework" />

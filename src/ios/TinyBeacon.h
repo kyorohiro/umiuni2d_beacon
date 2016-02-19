@@ -47,16 +47,31 @@
 - (void) clearFoundBeaconInfo;
 @end
 
-@interface TinyBeacon : CDVPlugin <CLLocationManagerDelegate>
-@property (nonatomic, strong) NSString* requestPermissionCallBackId;
+@protocol TinyBeaconDelegate <NSObject>
+-(void) onOKRequestPermissions:(NSString*) id;
+-(void) onFailedReqiestPermissions:(NSString*) id message:(NSString*) meesage;
+@end
+
+@interface TinyBeacon : NSObject <CLLocationManagerDelegate>
+@property (weak, nonatomic) NSString* delegateId;
+@property (weak, nonatomic) id <TinyBeaconDelegate> delegate;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 @property (nonatomic, strong) TinyBeacinInfoList *beaconInfos;
+- (id)init;
+- (void)startLescan:(NSString*)arg;
+- (void)stopLescan;
+- (void)requestPermissions:(id <TinyBeaconDelegate>) callback callbackId:(NSString*)callbackId;
+- (NSString*)getFoundBeacon;
+- (void)clearFoundBeacon;
+@end
+
+@interface TinyBeaconPlugin : CDVPlugin <CLLocationManagerDelegate, TinyBeaconDelegate>
+@property (nonatomic, strong) TinyBeacon* beacon;
 - (void)startLescan:(CDVInvokedUrlCommand*) command;
 - (void)stopLescan:(CDVInvokedUrlCommand*) command;
 - (void)requestPermissions:(CDVInvokedUrlCommand*) command;
 - (void)getFoundBeacon:(CDVInvokedUrlCommand*) command;
 - (void)clearFoundBeacon:(CDVInvokedUrlCommand*) command;
 @end
-
 
 #endif /* TinyBeacon_h */
