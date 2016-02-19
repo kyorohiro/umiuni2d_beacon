@@ -63,31 +63,26 @@
     NSMutableDictionary *root = [@{} mutableCopy];
     NSMutableArray *beacons = [@[] mutableCopy];
     for(TinyBeaconInfo* info in self.beaconInfos) {
-        if(info.found.boolValue != YES) {
+        if([info getFound ] != YES) {
             continue;
         }
         NSString *uuid = [[[info region] proximityUUID] UUIDString];
         NSObject *major = [NSNull null];
         NSObject *minor = [NSNull null];
-        NSObject *proximity = [info proximity];
-        NSObject *rssi = [info rssi];
-        NSObject *time = [info time];
+        NSObject *proximity = [NSNumber numberWithInteger:[info getProximity]];
+        NSObject *rssi = [NSNumber numberWithInteger:[info getRssi]];
+        NSObject *time = [NSNumber numberWithLong:[info getTime]];
+
         if([info getMajor] != [TinyBeaconInfo NUMBER_NULL]) {
             major =[NSNumber numberWithInt:[info getMajor]];
         }
         if([info getMinor] != [TinyBeaconInfo NUMBER_NULL]) {
             minor =[NSNumber numberWithInt:[info getMinor]];
         }
-        if(proximity == nil) {
-            proximity =[NSNull null];
-        }
-        if(rssi == nil) {
-            rssi =[NSNull null];
-        }
-        if(time == nil) {
-            time =[NSNull null];
-        }
-        NSDictionary *b = @{@"uuid":uuid, @"major":major, @"minor":minor, @"proximity":proximity, @"rssi" : rssi, @"time":time};
+        NSDictionary *b = @{
+          @"uuid":uuid,
+          @"major":major, @"minor":minor,
+          @"proximity":proximity, @"rssi" : rssi, @"time":time};
         [beacons addObject:b];
     }
     root [@"beacons"] = beacons;

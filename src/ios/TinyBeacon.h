@@ -19,27 +19,44 @@
     int nullRangingCount;
     int mMajor;
     int mMinor;
+    int mProximity;
+    bool mIsRanging;
+    bool mInRegion;
+    bool mFound;
+    bool mIsMonitoring;
+    long mTime;
+    int mRssi;
+
 }
 @property (nonatomic, strong) CLBeaconRegion *region;
-@property (nonatomic, strong) NSNumber *time;
-@property (nonatomic, strong) NSNumber *rssi;
-@property (nonatomic, strong) NSNumber *found;
-@property (nonatomic, strong) NSNumber *isMonitoring;
-@property (nonatomic, strong) NSNumber *isRanging;
-@property (nonatomic, strong) NSNumber *inRegion;
-@property (nonatomic, strong) NSNumber *proximity;
+
 + (int)NUMBER_NULL;
 - (id)initWithUUID:(NSString*)uuid major:(int)major minor:(int)minor;
 - (id)initWithBeaconRegion:(CLBeaconRegion*) regision;
 - (id)free;
 - (BOOL) isEqual:(id)other;
-
 - (int) getNullRangingCount;
 - (void) addNullRangingCount;
 - (void) clearNullRangingCount;
 - (NSString*) getUUID;
 - (int) getMajor;
 - (int) getMinor;
+- (NSString*) getProximityString;
+
+- (int) getProximity;
+- (void) setProximity:(int) v;
+- (void) setIsRanging:(bool)v;
+- (void) setInRegion:(bool)v;
+- (void) setFound:(bool)v;
+- (void) setIsMonitoring:(bool)v;
+- (void) setTime:(long)v;
+- (void) setRssi:(int)v;
+- (bool) getIsRanging;
+- (bool) getInRegion;
+- (bool) getFound;
+- (bool) getIsMonitoring;
+- (long) getTime;
+- (int) getRssi;
 @end
 
 @interface TinyBeacinInfoList : NSObject

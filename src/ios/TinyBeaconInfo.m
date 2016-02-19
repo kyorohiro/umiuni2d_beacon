@@ -21,6 +21,12 @@
     mMajor = major;
     mMinor = minor;
     mUuid = uuid;
+    mProximity = 0;
+    mRssi = 0;
+    mTime = 0L;
+    mFound = NO;
+    mIsRanging = NO;
+    mIsMonitoring = NO;
 
     //
     if(major == [TinyBeaconInfo NUMBER_NULL] && minor == [TinyBeaconInfo NUMBER_NULL]) {
@@ -31,12 +37,6 @@
         self.region = [[CLBeaconRegion alloc] initWithProximityUUID:uuidObj major:major minor:minor identifier:@"xxx"];
     }
     //
-    self.rssi = @0;
-    self.time = @0L;
-    self.found = @NO;
-    self.isRanging = @NO;
-    self.isMonitoring = @NO;
-    self.proximity = @0;
     nullRangingCount = 0;
     return self;
 }
@@ -52,13 +52,17 @@
     nullRangingCount = 0;
 }
 
+- (NSString*) getProximityString {
+    return @"";
+}
+
 - (id)initWithBeaconRegion:(CLBeaconRegion*) regision {
     self.region = regision;
-    self.rssi = @0;
-    self.time = @0L;
-    self.found = @NO;
-    self.isRanging = @NO;
-    self.isMonitoring = @NO;
+    mRssi = 0;
+    mTime = 0L;
+    mFound = NO;
+    mIsRanging = NO;
+    mIsMonitoring = NO;
     return self;
 }
 
@@ -78,6 +82,65 @@
     return mMinor;
 }
 
+- (int) getProximity {
+    return mProximity;
+}
+
+- (bool) getFound {
+    return mFound;
+}
+- (bool) getIsRanging
+{
+    return mIsRanging;
+}
+- (bool) getInRegion {
+    return mInRegion;
+}
+
+- (bool) getIsMonitoring {
+    return mIsMonitoring;
+}
+
+- (long) getTime {
+    return mTime;
+}
+
+- (int) getRssi {
+    return mRssi;
+}
+
+- (void) setProximity:(int) v
+{
+    mProximity = v;
+}
+
+- (void) setIsRanging:(bool)v
+{
+    mIsRanging = v;
+}
+
+- (void) setInRegion:(bool)v
+{
+    mInRegion = v;
+}
+
+- (void) setFound:(bool)v
+{
+    mFound = v;
+}
+- (void) setIsMonitoring:(bool)v
+{
+    mIsMonitoring = v;
+}
+- (void) setTime:(long)v
+{
+    mTime = v;
+}
+
+- (void) setRssi:(int)v
+{
+    mRssi = v;
+}
 
 - (BOOL) isEqual:(id)other {
     if(other == self) {
