@@ -83,7 +83,6 @@ abstract class TinyBeacon {
   clearFoundedBeacon();
 }
 
-
 class TinyBeaconCordova extends TinyBeacon {
   TinyCordova cordova = new TinyCordova();
 
@@ -94,18 +93,18 @@ class TinyBeaconCordova extends TinyBeacon {
     Map args = {};
     switch (flag) {
       case TinyBeaconScanFlag.LOW:
-        args["power"]= "low";
+        args["power"] = "low";
         break;
       case TinyBeaconScanFlag.HIGH:
-        args["power"]= "high";
+        args["power"] = "high";
         break;
       case TinyBeaconScanFlag.NORMAL:
       default:
-        args["power"]= "normal";
+        args["power"] = "normal";
         break;
     }
     List beaconArgs = [];
-    for(TinyBeaconScanInfo s in beacons) {
+    for (TinyBeaconScanInfo s in beacons) {
       beaconArgs.add(s.toMap());
     }
     args["beacons"] = beaconArgs;

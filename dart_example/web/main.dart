@@ -12,10 +12,8 @@ void main() {
     startLescanButton.onClick.listen((html.MouseEvent e) async {
       print("click startlescan");
       try {
-        await beacon.startLescan(
-          [new TinyBeaconScanInfo("f7826da64fa24e988024bc5b71e0893e"),
-          new TinyBeaconScanInfo("f7826da64fa24e988024bc5b71e0893f")]);
-      } catch(e) {
+        await beacon.startLescan([new TinyBeaconScanInfo("f7826da64fa24e988024bc5b71e0893e"), new TinyBeaconScanInfo("f7826da64fa24e988024bc5b71e0893f")]);
+      } catch (e) {
         print("##----C003-----${e}");
         print("failed to startLescan");
       }
@@ -29,7 +27,7 @@ void main() {
       print("click stoplescan");
       try {
         await beacon.stopLescan();
-      } catch(e) {
+      } catch (e) {
         print("##----C003-----${e}");
         print("failed to stopLescan");
       }
@@ -44,7 +42,7 @@ void main() {
       print("click requestPermissions");
       try {
         await beacon.requestPermissions(flag: TinyBeaconRequestFlag.WHEN_IN_USE);
-      } catch(e) {
+      } catch (e) {
         print("##----C003-----${e}");
       }
     });
@@ -57,7 +55,7 @@ void main() {
       print("click requestPermissions");
       try {
         await beacon.requestPermissions(flag: TinyBeaconRequestFlag.ALWAYS);
-      } catch(e) {
+      } catch (e) {
         print("##----C003-----${e}");
       }
     });
@@ -70,7 +68,7 @@ void main() {
       print("click getFoundBeacon");
       try {
         print("${await beacon.getFoundBeacon()}");
-      } catch(e) {
+      } catch (e) {
         print("##----C003-----${e}");
       }
     });
@@ -83,7 +81,7 @@ void main() {
       print("click clearFoundBeacon");
       try {
         beacon.clearFoundedBeacon();
-      } catch(e) {
+      } catch (e) {
         print("##----C003-----${e}");
       }
     });
