@@ -41,6 +41,7 @@ class TinyBeaconInfo {
         ret.put("rssi", rssi);
         ret.put("time", time);
         ret.put("proximity",getProximityString());
+        ret.put("accuracy", TinyIBeaconPacket.distance(packet, rssi));
         return ret;
     }
 
