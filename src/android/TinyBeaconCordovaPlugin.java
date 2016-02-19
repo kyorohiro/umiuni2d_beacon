@@ -16,6 +16,9 @@ import android.Manifest;
  * Created by kyorohiro on 2016/02/11.
  */
 public class TinyBeaconCordovaPlugin extends CordovaPlugin {
+    public static final String REQUEST_WHEN_IN_USE = "when_in_use";
+    public static final String REQUEST_ALWAYS = "always";
+
     TinyBeacon beacon = new TinyBeacon();
     CallbackContext callbackContextForRequestPermission = null;
 
@@ -23,9 +26,7 @@ public class TinyBeaconCordovaPlugin extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
         android.util.Log.v("KY", "### " + action + ", " + args);
         if("requestPermissions".equals(action)) {
-            android.util.Log.v("KY", "##A# ");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                android.util.Log.v("KY", "##B# ");
                 if(cordova.hasPermission(Manifest.permission.ACCESS_COARSE_LOCATION)) {
                     callbackContext.success();
                 } else {
@@ -36,7 +37,6 @@ public class TinyBeaconCordovaPlugin extends CordovaPlugin {
                         try {
                             callbackContextForRequestPermission = callbackContext;
                             cordova.requestPermissions(this, 0, new String[]{Manifest.permission.ACCESS_COARSE_LOCATION});
-                            android.util.Log.v("KY", "##C# ");
                         } catch(Exception e) {
                             callbackContextForRequestPermission = null;
                         }
