@@ -36,9 +36,9 @@ void main() {
   }
 
   {
-    html.InputElement stopLescanButton = new html.InputElement(type: "button");
-    stopLescanButton.value = "requestPermissions";
-    stopLescanButton.onClick.listen((html.MouseEvent e) async {
+    html.InputElement requestPermissionsButton = new html.InputElement(type: "button");
+    requestPermissionsButton.value = "requestPermissions";
+    requestPermissionsButton.onClick.listen((html.MouseEvent e) async {
       print("click requestPermissions");
       try {
         await beacon.requestPermissions();
@@ -46,12 +46,12 @@ void main() {
         print("##----C003-----${e}");
       }
     });
-    html.document.body.children.add(stopLescanButton);
+    html.document.body.children.add(requestPermissionsButton);
   }
 
   {
     html.InputElement getFoundBeaconButton = new html.InputElement(type: "button");
-    getFoundBeaconButton.value = "requestPermissions";
+    getFoundBeaconButton.value = "getFoundBeaconButton";
     getFoundBeaconButton.onClick.listen((html.MouseEvent e) async {
       print("click getFoundBeacon");
       try {
@@ -64,7 +64,7 @@ void main() {
   }
   {
     html.InputElement clearFoundBeaconButton = new html.InputElement(type: "button");
-    clearFoundBeaconButton.value = "requestPermissions";
+    clearFoundBeaconButton.value = "clearFoundBeaconButton";
     clearFoundBeaconButton.onClick.listen((html.MouseEvent e) async {
       print("click clearFoundBeacon");
       try {
