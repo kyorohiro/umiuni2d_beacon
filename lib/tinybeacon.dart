@@ -75,7 +75,7 @@ class TinyBeacon {
 
   //
   //
-  // android only : empty beacons is scan all beacon.  
+  // android only : empty beacons is scan all beacon.
   startLescan(List<TinyBeaconScanInfo> beacons,{flag:TinyBeaconScanFlag.NORMAL}) async {
     List args = [];
     args.add(flag);
@@ -88,13 +88,13 @@ class TinyBeacon {
   }
 
   requestPermissions({TinyBeaconRequestFlag flag:TinyBeaconRequestFlag.WHEN_IN_USE}) async {
-    String flag;
+    String flagForCordova;
     if(flag == TinyBeaconRequestFlag.WHEN_IN_USE) {
-      flag  = "foreground_only";
+      flagForCordova  = "when_in_use";
     } else {
-      flag  = "background";
+      flagForCordova  = "always";
     }
-    return await cordova.exec("TinyBeacon", "requestPermissions", [flag]);
+    return await cordova.exec("TinyBeacon", "requestPermissions", [flagForCordova]);
   }
 
   Future<String> getFoundBeacon() async {

@@ -43,7 +43,7 @@ void main() {
     requestPermissionsButton.onClick.listen((html.MouseEvent e) async {
       print("click requestPermissions");
       try {
-        await beacon.requestPermissions();
+        await beacon.requestPermissions(flag: TinyBeaconRequestFlag.WHEN_IN_USE);
       } catch(e) {
         print("##----C003-----${e}");
       }
