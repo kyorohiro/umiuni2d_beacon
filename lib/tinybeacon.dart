@@ -22,6 +22,39 @@ class TinyBeaconFoundBeacon {
   String toString() {
     return "uuid:${uuid}, major:${major}, minor:${minor}, proximity:${proximity}, accuracy:${accuracy}, rssi:${rssi}, time:${timeSec}";
   }
+
+  int get lazyHashCode {
+    int result = 17;
+    result = 37 * result + uuid.hashCode;
+    result = 37 * result + major.hashCode;
+    result = 37 * result + minor.hashCode;
+    return result;
+  }
+
+  int get hashCode {
+    int result = lazyHashCode;
+    result = 37 * result + proximity.hashCode;
+    result = 37 * result + accuracy.hashCode;
+    result = 37 * result + rssi.hashCode;
+    result = 37 * result + timeSec.hashCode;
+    return result;
+  }
+
+  bool lazyEqual(o) {
+    if (!(o is TinyBeaconFoundBeacon)) {
+      return false;
+    }
+    TinyBeaconFoundBeacon p = o;
+    return (uuid == p.uuid && major == p.major && minor == p.minor);
+  }
+
+  bool operator ==(o) {
+    if (false == lazyEqual(o)) {
+      return false;
+    }
+    TinyBeaconFoundBeacon p = o;
+    return (proximity == p.proximity && accuracy == p.accuracy && rssi == p.rssi && timeSec == p.timeSec);
+  }
 }
 
 abstract class TinyBeaconFoundResult {
@@ -32,7 +65,7 @@ abstract class TinyBeaconFoundResult {
   String toString() {
     StringBuffer buffer = new StringBuffer();
     buffer.write("time: ${timePerSec}\n");
-    for(TinyBeaconFoundBeacon b in beacons) {
+    for (TinyBeaconFoundBeacon b in beacons) {
       buffer.write("::beacon: ${b}\n");
     }
     return buffer.toString();
