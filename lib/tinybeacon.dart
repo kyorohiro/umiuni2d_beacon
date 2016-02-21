@@ -10,17 +10,18 @@ enum TinyBeaconRequestFlag {
 
 enum TinyBeaconScanFlag { LOW, NORMAL, HIGH }
 
+enum TinyBeaconProximity { NONE, IMMEDIATE, NEAR, FAR, UNKNOWN }
+
 class TinyBeaconFoundBeacon {
   String uuid;
   int major;
   int minor;
-  String proximity;
+  TinyBeaconProximity proximity;
   double accuracy;
   int rssi;
   int timeSec;
-  TinyBeaconFoundBeacon(this.uuid, this.major, this.minor, this.rssi, this.proximity, this.rssi, this.timeSec) {
 
-  }
+  TinyBeaconFoundBeacon(this.uuid, this.major, this.minor, this.rssi, this.proximity, this.accuracy, this.timeSec) {}
 
   @override
   String toString() {
@@ -58,6 +59,38 @@ class TinyBeaconFoundBeacon {
     }
     TinyBeaconFoundBeacon p = o;
     return (proximity == p.proximity && accuracy == p.accuracy && rssi == p.rssi && timeSec == p.timeSec);
+  }
+
+  static String toStringFromTinyBeaconProximity(TinyBeaconProximity proximity) {
+    switch (proximity) {
+      case TinyBeaconProximity.NONE:
+        return "none";
+      case TinyBeaconProximity.IMMEDIATE:
+        return "immediate";
+      case TinyBeaconProximity.NEAR:
+        return "near";
+      case TinyBeaconProximity.FAR:
+        return "far";
+      case TinyBeaconProximity.UNKNOWN:
+        return "unknown";
+    }
+    return "none";
+  }
+
+  static TinyBeaconProximity toTinyBeaconProximityFromString(String proximity) {
+    switch (proximity) {
+      case "none":
+        return TinyBeaconProximity.NONE;
+      case "immediate":
+        return TinyBeaconProximity.IMMEDIATE;
+      case "near":
+        return TinyBeaconProximity.NEAR;
+      case "far":
+        return TinyBeaconProximity.FAR;
+      case "unknown":
+        return TinyBeaconProximity.UNKNOWN;
+    }
+    return TinyBeaconProximity.NONE;
   }
 }
 
@@ -111,12 +144,11 @@ abstract class TinyBeacon {
   clearFoundedBeacon();
 }
 
-class TinyBeaconUuid
-{
+class TinyBeaconUuid {
   static math.Random _random = new math.Random();
 
   static String createUuid() {
-    return s4()+s4()+"-"+s4()+"-"+s4()+"-"+s4()+"-"+s4()+s4()+s4();
+    return s4() + s4() + "-" + s4() + "-" + s4() + "-" + s4() + "-" + s4() + s4() + s4();
   }
 
   static String normalizeUUIDString(String uuid) {
@@ -128,6 +160,6 @@ class TinyBeaconUuid
   }
 
   static String s4() {
-    return (_random.nextInt(0xFFFF)+0x10000).toRadixString(16).substring(0,4);
+    return (_random.nextInt(0xFFFF) + 0x10000).toRadixString(16).substring(0, 4);
   }
 }
