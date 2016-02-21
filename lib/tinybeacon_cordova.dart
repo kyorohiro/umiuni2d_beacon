@@ -86,14 +86,10 @@ class TinyBeaconFoundInfoCordova extends TinyBeaconFoundResult {
       _mTimePerSec = root["time"];
       List<Map> beacons = root["founded"];
       for (Map b in beacons) {
-        _mBeacons.add(new TinyBeaconFoundBeacon()
-          ..uuid = b["uuid"]
-          ..major = b["major"]
-          ..minor = b["minor"]
-          ..proximity = b["proximity"]
-          ..accuracy = b["accuracy"]
-          ..timeSec = b["time"]
-          ..rssi = b["rssi"]);
+        //this.uuid, this.major, this.minor, this.rssi, this.proximity, this.rssi, this.timeSec
+        _mBeacons.add(new TinyBeaconFoundBeacon(
+          b["uuid"], b["major"], b["minor"],b["rssi"],
+          b["proximity"], b["accuracy"], b["time"]));
       }
       isDecode = true;
     }

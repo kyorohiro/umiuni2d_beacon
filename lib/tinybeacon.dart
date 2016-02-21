@@ -17,6 +17,9 @@ class TinyBeaconFoundBeacon {
   double accuracy;
   int rssi;
   int timeSec;
+  TinyBeaconFoundBeacon(this.uuid, this.major, this.minor, this.rssi, this.proximity, this.rssi, this.timeSec) {
+
+  }
 
   @override
   String toString() {
