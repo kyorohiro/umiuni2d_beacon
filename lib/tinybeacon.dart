@@ -1,6 +1,7 @@
 library umiuni2d_beacon;
 
 import 'dart:async';
+import 'dart:typed_data';
 import 'dart:math' as math;
 
 enum TinyBeaconRequestFlag {
@@ -61,37 +62,7 @@ class TinyBeaconFoundBeacon {
     return (proximity == p.proximity && accuracy == p.accuracy && rssi == p.rssi && timeSec == p.timeSec);
   }
 
-  static String toStringFromTinyBeaconProximity(TinyBeaconProximity proximity) {
-    switch (proximity) {
-      case TinyBeaconProximity.NONE:
-        return "none";
-      case TinyBeaconProximity.IMMEDIATE:
-        return "immediate";
-      case TinyBeaconProximity.NEAR:
-        return "near";
-      case TinyBeaconProximity.FAR:
-        return "far";
-      case TinyBeaconProximity.UNKNOWN:
-        return "unknown";
-    }
-    return "none";
-  }
 
-  static TinyBeaconProximity toTinyBeaconProximityFromString(String proximity) {
-    switch (proximity) {
-      case "none":
-        return TinyBeaconProximity.NONE;
-      case "immediate":
-        return TinyBeaconProximity.IMMEDIATE;
-      case "near":
-        return TinyBeaconProximity.NEAR;
-      case "far":
-        return TinyBeaconProximity.FAR;
-      case "unknown":
-        return TinyBeaconProximity.UNKNOWN;
-    }
-    return TinyBeaconProximity.NONE;
-  }
 }
 
 abstract class TinyBeaconFoundResult {
@@ -142,6 +113,71 @@ abstract class TinyBeacon {
   requestPermissions({TinyBeaconRequestFlag flag: TinyBeaconRequestFlag.WHEN_IN_USE});
   Future<TinyBeaconFoundResult> getFoundBeacon();
   clearFoundedBeacon();
+
+  //
+  static int toIntFromTinyBeaconProximity(TinyBeaconProximity proximity) {
+    switch (proximity) {
+      case TinyBeaconProximity.NONE:
+        return 0;
+      case TinyBeaconProximity.IMMEDIATE:
+        return 1;
+      case TinyBeaconProximity.NEAR:
+        return 2;
+      case TinyBeaconProximity.FAR:
+        return 3;
+      case TinyBeaconProximity.UNKNOWN:
+        return 4;
+    }
+    return 0;
+  }
+
+  static TinyBeaconProximity toTinyBeaconProximityFromInt(int proximity) {
+    switch (proximity) {
+      case 0:
+        return TinyBeaconProximity.NONE;
+      case 1:
+        return TinyBeaconProximity.IMMEDIATE;
+      case 2:
+        return TinyBeaconProximity.NEAR;
+      case 3:
+        return TinyBeaconProximity.FAR;
+      case 4:
+        return TinyBeaconProximity.UNKNOWN;
+    }
+    return TinyBeaconProximity.NONE;
+  }
+
+  static String toStringFromTinyBeaconProximity(TinyBeaconProximity proximity) {
+    switch (proximity) {
+      case TinyBeaconProximity.NONE:
+        return "none";
+      case TinyBeaconProximity.IMMEDIATE:
+        return "immediate";
+      case TinyBeaconProximity.NEAR:
+        return "near";
+      case TinyBeaconProximity.FAR:
+        return "far";
+      case TinyBeaconProximity.UNKNOWN:
+        return "unknown";
+    }
+    return "none";
+  }
+
+  static TinyBeaconProximity toTinyBeaconProximityFromString(String proximity) {
+    switch (proximity) {
+      case "none":
+        return TinyBeaconProximity.NONE;
+      case "immediate":
+        return TinyBeaconProximity.IMMEDIATE;
+      case "near":
+        return TinyBeaconProximity.NEAR;
+      case "far":
+        return TinyBeaconProximity.FAR;
+      case "unknown":
+        return TinyBeaconProximity.UNKNOWN;
+    }
+    return TinyBeaconProximity.NONE;
+  }
 }
 
 class TinyBeaconUuid {
@@ -155,11 +191,36 @@ class TinyBeaconUuid {
     if (uuid.contains("-")) {
       return uuid;
     } else {
-      return "${uuid.substring(0,8)}-${uuid.substring(8,12)}" + "-${uuid.substring(12,16)}-${uuid.substring(16,20)}" + "-${uuid.substring(20)}";
+      return "${uuid.substring(0,8)}-${uuid.substring(8,12)}" + "-${uuid.substring(12,16)}-${uuid.substring(16,20)}" + "-${uuid.substring(20)}".toLowerCase();
     }
   }
 
   static String s4() {
     return (_random.nextInt(0xFFFF) + 0x10000).toRadixString(16).substring(0, 4);
+  }
+
+  static List<String> _v = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"];
+  static String toStringFromBytes(Uint8List uuidBytes, {int start:0}) {
+    StringBuffer buffer = new StringBuffer();
+    for(int i=0;i<16;i++) {
+      buffer.write(_v[0xff&uuidBytes[i+start]]);
+    }
+    return normalizeUUIDString(buffer.toString());
+  }
+
+  static Uint8List toBytesFromUUID(String normalizedUUID) {
+    Uint8List buffer = new Uint8List(16);
+    for(int i in normalizedUUID.codeUnits) {
+      if(48<=i && 57<=i) {
+        buffer[i] = i-48;
+      }
+      else if(65<=i && i<=70) {
+        buffer[i] = i-65+10;
+      }
+      else if(97<=i && i<=102) {
+        buffer[i] = i-97+10;
+      }
+    }
+    return buffer;
   }
 }
