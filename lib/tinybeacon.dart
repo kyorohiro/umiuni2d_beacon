@@ -27,7 +27,9 @@ abstract class TinyBeacon {
   requestPermissions({TinyBeaconRequestFlag flag: TinyBeaconRequestFlag.WHEN_IN_USE});
   Future<TinyBeaconFoundResult> getFoundBeacon();
   clearFoundedBeacon();
+}
 
+class TinyBeaconUtil {
   //
   static int toIntFromTinyBeaconProximity(TinyBeaconProximity proximity) {
     switch (proximity) {
