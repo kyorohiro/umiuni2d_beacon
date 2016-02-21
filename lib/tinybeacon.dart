@@ -1,6 +1,7 @@
 library umiuni2d_beacon;
 
 import 'dart:async';
+import 'dart:math' as math;
 
 enum TinyBeaconRequestFlag {
   WHEN_IN_USE, //= "foreground_only";
@@ -108,4 +109,15 @@ abstract class TinyBeacon {
   requestPermissions({TinyBeaconRequestFlag flag: TinyBeaconRequestFlag.WHEN_IN_USE});
   Future<TinyBeaconFoundResult> getFoundBeacon();
   clearFoundedBeacon();
+}
+
+class TinyBeaconUuid
+{
+  static math.Random _random = new math.Random();
+  static String createUuid() {
+    return s4()+s4()+"-"+s4()+"-"+s4()+"-"+s4()+"-"+s4()+s4()+s4();
+  }
+  static String s4() {
+    return (_random.nextInt(0xFFFF)+0x10000).toRadixString(16).substring(0,4);
+  }
 }
