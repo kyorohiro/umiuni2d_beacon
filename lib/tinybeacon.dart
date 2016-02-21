@@ -114,9 +114,19 @@ abstract class TinyBeacon {
 class TinyBeaconUuid
 {
   static math.Random _random = new math.Random();
+
   static String createUuid() {
     return s4()+s4()+"-"+s4()+"-"+s4()+"-"+s4()+"-"+s4()+s4()+s4();
   }
+
+  static String normalizeUUIDString(String uuid) {
+    if (uuid.contains("-")) {
+      return uuid;
+    } else {
+      return "${uuid.substring(0,8)}-${uuid.substring(8,12)}" + "-${uuid.substring(12,16)}-${uuid.substring(16,20)}" + "-${uuid.substring(20)}";
+    }
+  }
+
   static String s4() {
     return (_random.nextInt(0xFFFF)+0x10000).toRadixString(16).substring(0,4);
   }
