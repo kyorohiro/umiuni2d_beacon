@@ -13,6 +13,12 @@ enum TinyBeaconScanFlag { LOW, NORMAL, HIGH }
 
 enum TinyBeaconProximity { NONE, IMMEDIATE, NEAR, FAR, UNKNOWN }
 
+
+
+/**
+ *
+ *
+ */
 class TinyBeaconFoundBeacon {
   String uuid;
   int major;
@@ -62,9 +68,12 @@ class TinyBeaconFoundBeacon {
     return (proximity == p.proximity && accuracy == p.accuracy && rssi == p.rssi && timeSec == p.timeSec);
   }
 
-
 }
 
+/**
+ *
+ *
+ */
 abstract class TinyBeaconFoundResult {
   int get timePerSec;
   List<TinyBeaconFoundBeacon> get beacons;
@@ -80,6 +89,11 @@ abstract class TinyBeaconFoundResult {
   }
 }
 
+
+/**
+ *
+ *
+ */
 class TinyBeaconScanInfo {
   String uuid;
   int major;
@@ -105,6 +119,11 @@ class TinyBeaconScanInfo {
   }
 }
 
+
+/**
+ *
+ *
+ */
 abstract class TinyBeacon {
   //
   // android only : empty beacons is scan all beacon.
@@ -180,6 +199,14 @@ abstract class TinyBeacon {
   }
 }
 
+
+
+
+
+/**
+ *
+ *
+ */
 class TinyBeaconUuid {
   static math.Random _random = new math.Random();
 
