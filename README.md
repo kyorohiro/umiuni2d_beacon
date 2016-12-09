@@ -10,3 +10,4 @@ cordova plugin add https://github.com/kyorohiro/umiuni2d_beacon.git
 # use from dart
 check dart_example
 
+
